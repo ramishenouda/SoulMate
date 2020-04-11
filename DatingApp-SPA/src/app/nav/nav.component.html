@@ -15,15 +15,15 @@
         </ul>
 
         <div *ngIf='loggedIn()' class="dropdown" dropdown>
-            <span class="dropdown-toggle text-light font-weight-bold" dropdownToggle>
+            <span class="dropdown-toggle text-light" dropdownToggle>
             Welcome {{ authService.decodedToken.unique_name | titlecase}}
             </span>
         
             <div class="dropdown-menu mt-3" *dropdownMenu>
-                <a class="dropdown-item" href="#">
+                <a class="dropdown-item" [routerLink]="['/member/profile']">
                     <i class="fa fa-user"></i> Edit Profile</a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#" (click)='logOut()'>
+                <a class="dropdown-item" (click)='logOut()'>
                     <i class="fa fa-sign-out"></i> Logout</a>
             </div>
         </div>
