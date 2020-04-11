@@ -11,7 +11,7 @@ export class ErrorInterceptor implements HttpInterceptor {
   ): import('rxjs').Observable<import('@angular/common/http').HttpEvent<any>> {
     return next.handle(req).pipe(
       catchError(error => {
-        if (error.stauts === 401) {
+        if (error.status === 401) {
           return throwError(error.statusText);
         }
 
@@ -22,6 +22,7 @@ export class ErrorInterceptor implements HttpInterceptor {
           }
 
           const serverError = error.error;
+
           let modelStateErrors = '';
           if (serverError.errors && typeof serverError.errors === 'object') {
             for (const key in serverError.errors) {
@@ -30,8 +31,7 @@ export class ErrorInterceptor implements HttpInterceptor {
               }
             }
           }
-
-          return throwError(modelStateErrors || serverError || 'Server Error');
+          return throwError(modelStateErrors || typeof serverError !== 'object' ? serverError : 'Server Error');
         }
       })
     );

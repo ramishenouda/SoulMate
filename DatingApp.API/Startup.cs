@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using AutoMapper;
 using DatingApp.API.Data;
@@ -62,9 +63,9 @@ namespace DatingApp.API
                     builder.Run(async context => {
                         context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                         var error = context.Features.Get<IExceptionHandlerFeature>();
-
                         if(error != null)
                         {
+                            Console.WriteLine(error.Error.Message);
                             context.Response.AddApplicationError(error.Error.Message);
                             await context.Response.WriteAsync(error.Error.Message);
                         }
