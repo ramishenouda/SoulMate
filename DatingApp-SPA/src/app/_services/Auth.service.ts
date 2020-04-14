@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { environment } from 'src/environments/environment';
+import { User } from '../_models/user';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +13,16 @@ export class AuthService {
   baseUrl = environment.apiUrl + 'auth/';
   jwtHelper = new JwtHelperService();
   decodedToken: any;
+  currentUser: User;
+  photoUrl = new BehaviorSubject<string>(environment.assetsPath + 'user.png');
+  currentPhotoUrl = this.photoUrl.asObservable();
 
-constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) { }
+
+  changeMemberPhoto(photoUrl: string) {
+    this.photoUrl.next(photoUrl);
+  }
+
   login(model: any) {
     return this.http.post(this.baseUrl + 'login', model)
       .pipe(
@@ -20,7 +30,12 @@ constructor(private http: HttpClient) { }
           const user = response;
           if (user) {
             localStorage.setItem('token', user.token);
+            localStorage.setItem('user', JSON.stringify(user.user));
+            // sets the decodedToken to be equal to token
             this.setToken(user.token);
+            // sets the current user to be equal to user
+            this.setUser(user.user);
+            this.changeMemberPhoto(this.currentUser.photoUrl);
           }
         })
       );
@@ -30,12 +45,19 @@ constructor(private http: HttpClient) { }
     return this.http.post(this.baseUrl + 'register', model);
   }
 
+  logOut() {
+    localStorage.clear();
+  }
+
   loggedIn() {
     const token = localStorage.getItem('token');
     return !this.jwtHelper.isTokenExpired(token);
   }
 
   setToken(token: any) {
-      this.decodedToken = this.jwtHelper.decodeToken(token);
+    this.decodedToken = this.jwtHelper.decodeToken(token);
+  }
+  setUser(user: User) {
+      this.currentUser = user;
   }
 }

@@ -8,6 +8,7 @@ import { TabsModule } from 'ngx-bootstrap/tabs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { NgxGalleryModule } from '@kolkov/ngx-gallery';
+import { FileUploadModule } from 'ng2-file-upload';
 
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
@@ -29,6 +30,7 @@ import { MemberListResolver } from './_resolvers/member-list.resolver';
 import { MemberProfileComponent } from './members/member-profile/member-profile.component';
 import { MemberProfileResolver } from './_resolvers/member-profile.resolver';
 import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
+import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
 
 export function tokenGetter() {
    return localStorage.getItem('token');
@@ -45,7 +47,8 @@ export function tokenGetter() {
       MessagesComponent,
       MemberCardComponent,
       MemberDetailComponent,
-      MemberProfileComponent
+      MemberProfileComponent,
+      PhotoEditorComponent
    ],
    imports: [
       BrowserModule,
@@ -56,6 +59,7 @@ export function tokenGetter() {
       BsDropdownModule.forRoot(),
       TabsModule.forRoot(),
       RouterModule.forRoot(appRoutes),
+      FileUploadModule,
       JwtModule.forRoot({
          config: {
             tokenGetter,

@@ -25,6 +25,8 @@ namespace DatingApp.API.Helpers
             CreateMap<Photo, PhotosForDetailedDto>();
             //We take the user from the SPA and convert it into a user
             CreateMap<UserForUpdateDto, User>();
+            CreateMap<Photo, PhotoForReturnDto>();
+            CreateMap<PhotoForUploadingDto, Photo>();
         }
     }
 }
