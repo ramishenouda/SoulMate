@@ -24,6 +24,7 @@ export class AuthService {
   }
 
   login(model: any) {
+    localStorage.clear();
     return this.http.post(this.baseUrl + 'login', model)
       .pipe(
         map((response: any) => {
@@ -41,8 +42,8 @@ export class AuthService {
       );
   }
 
-  register(model: any) {
-    return this.http.post(this.baseUrl + 'register', model);
+  register(user: User) {
+    return this.http.post(this.baseUrl + 'register', user);
   }
 
   logOut() {

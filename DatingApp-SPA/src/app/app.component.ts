@@ -16,7 +16,7 @@ export class AppComponent implements OnInit{
       this.authService.setToken(token);
       this.authService.setUser(user);
       this.authService.changeMemberPhoto(user.photoUrl);
-    } else {
+    } else if (token || user ) {
       this.authService.logOut();
       this.alertify.error('An error occurred, please login again.');
     }
