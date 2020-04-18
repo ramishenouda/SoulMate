@@ -32,6 +32,7 @@ import { MemberProfileComponent } from './members/member-profile/member-profile.
 import { MemberProfileResolver } from './_resolvers/member-profile.resolver';
 import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
 import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
+import { TimeAgoPipe } from 'src/app/_pipes/time-ago.pipe.ts.pipe';
 
 export function tokenGetter() {
    return localStorage.getItem('token');
@@ -49,7 +50,8 @@ export function tokenGetter() {
       MemberCardComponent,
       MemberDetailComponent,
       MemberProfileComponent,
-      PhotoEditorComponent
+      PhotoEditorComponent,
+      TimeAgoPipe,
    ],
    imports: [
       BrowserModule,
