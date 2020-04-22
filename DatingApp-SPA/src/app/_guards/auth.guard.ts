@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { CanActivate, Router } from '@angular/router';
 import { AuthService } from '../_services/Auth.service';
 import { AlertifyService } from '../_services/alertify.service';
 
@@ -14,6 +13,8 @@ export class AuthGuard implements CanActivate {
       return true;
     }
 
-    this.alertify.error('Login to access this page');
+    this.alertify.error('Login first');
+    this.router.navigate(['/home']);
+    return false;
   }
 }
