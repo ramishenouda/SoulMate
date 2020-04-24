@@ -35,6 +35,7 @@ import { MemberProfileResolver } from './_resolvers/member-profile.resolver';
 import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
 import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
 import { TimeAgoPipe } from 'src/app/_pipes/time-ago.pipe.ts.pipe';
+import { ListResolver } from './_resolvers/lists.resolver';
 
 export function tokenGetter() {
    return localStorage.getItem('token');
@@ -83,6 +84,7 @@ export function tokenGetter() {
       AlertifyService,
       AuthGuard,
       UserService,
+      ListResolver,
       MemberListResolver,
       MemberDetailResolver,
       MemberProfileResolver,
