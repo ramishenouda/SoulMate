@@ -125,13 +125,13 @@ namespace DatingApp.API.Data
             switch (messageParams.MessageContainer)
             {
                 case "Inbox":
-                    messages = messages.Where(u => u.RecipientId == messageParams.UserId);
+                    messages = messages.Where(u => u.RecipientId == messageParams.UserId && u.RecipientDeleted == false);
                     break;
                 case "Outbox":
-                    messages = messages.Where(u => u.SenderId == messageParams.UserId);
+                    messages = messages.Where(u => u.SenderId == messageParams.UserId && u.SenderDeleted == false);
                     break;
                 default:
-                    messages = messages.Where(u => u.RecipientId == messageParams.UserId && !u.IsRead);
+                    messages = messages.Where(u => u.RecipientId == messageParams.UserId &&!u.IsRead && u.RecipientDeleted == false);
                     break;
             }
 
@@ -140,13 +140,14 @@ namespace DatingApp.API.Data
             return await PagedList<Message>.CreateAsync(messages, messageParams.PageNumber, messageParams.PageSize);
         }
 
-        public async Task<IEnumerable<Message>> GetMessagesThread(int userId, int recipientId)
+        public async Task<IEnumerable<Message>> GetMessagesThread(int userId, int recipientId, int fromMessage = -1)
         {
             var messages = await _context.Messages
                 .Include(u => u.Sender).ThenInclude(p => p.Photos)
                 .Include(u => u.Recipient).ThenInclude(p => p.Photos)
-                .Where(m => (m.RecipientId == userId && m.SenderId == recipientId)
-                    || (m.RecipientId == recipientId && m.SenderId == userId))
+                .Where(m => ((m.RecipientId == userId && m.SenderId == recipientId && m.RecipientDeleted == false)
+                    || (m.RecipientId == recipientId && m.SenderId == userId && m.SenderDeleted == false))
+                    && m.Id > fromMessage)
                 .OrderByDescending(m => m.SentDate)
                 .ToListAsync();
                 

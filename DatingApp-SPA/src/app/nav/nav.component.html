@@ -1,4 +1,5 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+<!--Menu, for large screens-->
+<nav *ngIf="screenSize > 768" class="datingMenu navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container">
         <a class="navbar-brand" [routerLink]="['/']"> HW </a>
 
@@ -19,15 +20,17 @@
                 <img src="{{ photoUrl || '../../assets/user.png' }}" alt=" {{ authService.currentUser.knownAs }} ">
             </span>
             <span class="dropdown-toggle text-light" dropdownToggle>
-            Welcome {{ authService.decodedToken.unique_name | titlecase}}
+                Welcome {{ authService.decodedToken.unique_name | titlecase}}
             </span>
         
             <div class="dropdown-menu mt-3" *dropdownMenu>
                 <a class="dropdown-item" [routerLink]="['/member/profile']">
-                    <i class="fa fa-user"></i> Edit Profile</a>
+                    <i class="fa fa-user"></i> Edit Profile
+                </a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" (click)='logOut()'>
-                    <i class="fa fa-sign-out"></i> Logout</a>
+                    <i class="fa fa-sign-out"></i> Logout
+                </a>
             </div>
         </div>
 
@@ -38,5 +41,64 @@
                 placeholder="Password" required [(ngModel)]="model.password">
             <button [disabled]="!loginForm.valid" class="btn btn-success my-2 my-sm-0" type="submit">Login</button>
         </form>
+    </div>
+</nav>
+
+<!--Menu, for small screens.-->
+<nav *ngIf="screenSize <= 768 && loggedIn()" class="datingMenu navbar bg-primary dropdown"  #dropdown="bs-dropdown" [insideClick]="true" dropdown>
+    <span class="dropdown-toggle text-light" dropdownToggle>
+        <span class="user-image mr-1">
+            <img src="{{ photoUrl || '../../assets/user.png' }}" alt=" {{ authService.currentUser.knownAs }} ">
+        </span>
+        Welcome {{ authService.decodedToken.unique_name | titlecase}}
+    </span>
+    <div class="dropdown-menu mt-1" *dropdownMenu>
+        <a class="dropdown-item" [routerLink]="['/members']" (click)="dropdown.isOpen = false">
+            Matches
+        </a>
+        
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" [routerLink]="['/lists']" (click)="dropdown.isOpen = false">
+            Lists
+        </a>
+
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" [routerLink]="['/messages']" (click)="dropdown.isOpen = false">
+            Messages
+        </a>
+
+        <div class="dropdown-divider"></div>
+        <div class="dropdown-item">
+            <a class="dropdown" dropdown>
+                <span class="dropdown-toggle dropdown-item" dropdownToggle>Account</span>
+                <div class="dropdown-menu" style="margin-left: 135px;" *dropdownMenu>
+                    <a class="dropdown-item" [routerLink]="['/member/profile']">
+                        <i class="fa fa-user"></i> Edit Profile
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" (click)='logOut()'>
+                        <i class="fa fa-sign-out"></i> Logout
+                    </a>
+                </div>
+            </a>
+        </div>
+    </div>
+</nav>
+
+<!--Login Form, for mobile devices.-->
+<nav *ngIf="screenSize <= 576 && !loggedIn()" class="datingMenu navbar bg-primary dropdown" [insideClick]="true" dropdown>
+    <div *ngIf="!loggedIn()">
+        <span class="dropdown-toggle text-light" dropdownToggle>
+            Login
+        </span>
+        <div class="dropdown-menu" *dropdownMenu>
+            <form *ngIf='!loggedIn()' #loginForm="ngForm" class="dropdown-item form-inline my-2 my-lg-0" (ngSubmit)="login()">
+                <input class="form-control mr-sm-2" type="text" name="username" 
+                    placeholder="Username" required [(ngModel)]="model.username">
+                <input class="form-control mr-sm-2" type="password" name="password"
+                    placeholder="Password" required [(ngModel)]="model.password">
+                <button [disabled]="!loginForm.valid" class="btn btn-success my-2 my-sm-0" type="submit">Login</button>
+            </form>
+        </div>
     </div>
 </nav>

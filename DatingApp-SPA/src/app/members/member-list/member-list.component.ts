@@ -17,6 +17,7 @@ export class MemberListComponent implements OnInit {
   userParams: any = {};
   genderList = [{value: 'male', display: 'Males'}, {value: 'female', display: 'Females'}];
   pagination: Pagination;
+  messages = false;
 
   constructor(private userService: UserService, private alertify: AlertifyService,
               private route: ActivatedRoute) { }

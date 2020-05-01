@@ -8,8 +8,9 @@
       <li class="list-inline-item" (click)="sendLike(user.id)">
         <button class="btn btn-primary"><i class="fa fa-heart"></i></button>
       </li>
-      <li class="list-inline-item">
-        <button class="btn btn-primary"><i class="fa fa-envelope"></i></button>
+      <li *ngIf="messages" class="list-inline-item">
+        <button class="btn btn-primary" [routerLink]="['/members/', user.id]"
+          [queryParams]="{tab: 2}"><i class="fa fa-envelope"></i></button>
       </li>
     </ul>
   </div>

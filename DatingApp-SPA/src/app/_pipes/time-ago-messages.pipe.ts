@@ -1,8 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { datepickerAnimation } from 'ngx-bootstrap/datepicker/datepicker-animations';
 
-@Pipe({name: 'timeAgo'})
-export class TimeAgoPipe implements PipeTransform {
+@Pipe({name: 'timeAgoMessages'})
+export class TimeAgoPipeMessages implements PipeTransform {
   transform(value: Date) {
     const currentSeconds = new Date().valueOf();
     const valueSeconds = new Date(value).valueOf();
@@ -13,10 +12,8 @@ export class TimeAgoPipe implements PipeTransform {
 
   getLastActive(time: number): string {
     // The time is in seconds at first
-    if (time < 20) {
-      return 'Online';
-    } else if (time < 45) {
-      return 'Few seconds ago';
+    if (time < 45) {
+      return 'seconds ago';
     }
     // Now minutes
     time /= 60;
@@ -62,3 +59,4 @@ export class TimeAgoPipe implements PipeTransform {
     return time + message;
   }
 }
+

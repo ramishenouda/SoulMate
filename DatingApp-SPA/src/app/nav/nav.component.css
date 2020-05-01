@@ -2,8 +2,18 @@
   cursor: pointer;
 }
 
+.datingMenu {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 2;
+  display: block;
+}
+
 .user-image > img {
   max-height: 40px;
   border: 2px solid white;
+  border-radius: 100%;
   display: inline;
+  text-align: center;
 }

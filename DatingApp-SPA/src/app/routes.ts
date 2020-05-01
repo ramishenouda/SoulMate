@@ -11,6 +11,7 @@ import { MemberProfileComponent } from './members/member-profile/member-profile.
 import { MemberProfileResolver } from './_resolvers/member-profile.resolver';
 import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
 import { ListResolver } from './_resolvers/lists.resolver';
+import { MessagesResolver } from './_resolvers/messages.resolver';
 
 export const appRoutes: Routes = [
   { path: '', component: HomeComponent },
@@ -25,7 +26,7 @@ export const appRoutes: Routes = [
         resolve: { user: MemberDetailResolver }},
       { path: 'member/profile', component: MemberProfileComponent,
         resolve: { user: MemberProfileResolver }, canDeactivate: [PreventUnsavedChanges]},
-      { path: 'messages', component: MessagesComponent},
+      { path: 'messages', component: MessagesComponent, resolve: {messages: MessagesResolver}},
       { path: 'lists', component: ListsComponent, resolve: {users: ListResolver} }
     ]
   },

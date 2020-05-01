@@ -1,9 +1,10 @@
-import { Component, OnInit, Pipe, PipeTransform } from '@angular/core';
+import { Component, OnInit, Pipe, PipeTransform, ViewChild } from '@angular/core';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { UserService } from 'src/app/_services/user.service';
 import { ActivatedRoute } from '@angular/router';
 import { User } from 'src/app/_models/user';
 import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from '@kolkov/ngx-gallery';
+import { TabsetComponent } from 'ngx-bootstrap/tabs/ngx-bootstrap-tabs';
 
 @Component({
   selector: 'app-member-detail',
@@ -11,6 +12,7 @@ import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from '@kolkov
   styleUrls: ['./member-detail.component.css']
 })
 export class MemberDetailComponent implements OnInit {
+  @ViewChild('tabSet', { static: true }) tabSet: TabsetComponent;
   user: User;
   galleryOptions: NgxGalleryOptions[];
   galleryImages: NgxGalleryImage[];
@@ -23,10 +25,14 @@ export class MemberDetailComponent implements OnInit {
       this.user = data.user;
     });
 
+    this.route.queryParams.subscribe(params => {
+      const selectedTab = params.tab;
+      this.tabSet.tabs[selectedTab > 0 ? selectedTab : 0].active = true;
+    });
     this.galleryOptions = [
       {
         width: '100%',
-        height: '550px',
+        height: '500px',
         imagePercent: 100,
         thumbnailsColumns: 5,
         imageAnimation: NgxGalleryAnimation.Slide,
@@ -66,6 +72,10 @@ export class MemberDetailComponent implements OnInit {
     }
 
     return imagesUrl;
+  }
+
+  selectTab(tabId: number) {
+    this.tabSet.tabs[tabId].active = true;
   }
 
   // loadUser() {

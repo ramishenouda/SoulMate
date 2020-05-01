@@ -11,8 +11,10 @@ import { AuthService } from 'src/app/_services/Auth.service';
 })
 export class MemberCardComponent implements OnInit {
   @Input() user: User;
+  @Input() messages: boolean;
 
-  constructor(private userService: UserService, private alertify: AlertifyService, private authService: AuthService) { }
+  constructor(private userService: UserService, private alertify: AlertifyService,
+              private authService: AuthService) { }
 
   ngOnInit() {
   }

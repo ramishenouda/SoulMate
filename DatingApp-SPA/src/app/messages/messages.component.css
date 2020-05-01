@@ -1,0 +1,14 @@
+table {
+    margin-top: 15px
+}
+
+td {
+    vertical-align: middle;
+}
+
+.img-circle {
+    max-height: 40px;
+}
+.message-area:hover {
+    background-color: rgb(185, 183, 183);
+}
