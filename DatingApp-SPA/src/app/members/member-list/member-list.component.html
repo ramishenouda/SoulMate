@@ -7,13 +7,13 @@
         <form class="form-inline" #form="ngForm" (ngSubmit)="loadUsers()" novalidate>
             <div class="form-group">
                 <label for="minAge" class="mr-1">Min age :</label>
-                <input type="number" min="18" class="form-control" style="width: 70px" 
+                <input type="number" min="18" class="form-control" style="width: 100px" 
                     id="minAge" [(ngModel)]="userParams.minAge" name="minAge">
             </div>
 
             <div class="form-group ml-2">
                 <label for="maxAge" class="mr-1">Max age :</label>
-                <input type="number" minlength="18" class="form-control" style="width: 70px"
+                <input type="number" minlength="18" class="form-control" style="width: 100px"
                     [(ngModel)]="userParams.maxAge" id="maxAge" name="maxAge">
             </div>
 

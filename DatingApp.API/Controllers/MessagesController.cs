@@ -59,16 +59,38 @@ namespace DatingApp.API.Controller
             return Ok(messages);
         }
 
-        [HttpGet("thread/{recipientId}")]
-        public async Task<IActionResult> GetMessageThread(int userId, int recipientId, int fromMessage = -1)
+        [HttpGet("thread/{recipientId}/{maximumId}")]
+        public async Task<IActionResult> GetMessageThread(int userId, int recipientId, [FromQuery]MessageParams messageParams, int maximumId)
         {
             if(userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
 
-            var messagesFromRepo = await _repo.GetMessagesThread(userId, recipientId, fromMessage);
-            var messageThread = _mapper.Map<IEnumerable<MessageToReturnDto>>(messagesFromRepo);
+            var currentLoggedInUser = await _repo.GetUser(userId);
+            if(currentLoggedInUser == null)
+                return Unauthorized();
 
-            return Ok(messageThread);
+            var messages = await _repo.GetMessagesThread(userId, recipientId, messageParams, maximumId);
+            var messagesToReturn = _mapper.Map<IEnumerable<MessageToReturnDto>>(messages);
+
+            Response.AddPagination(messages.CurrentPage, messages.PageSize, messages.TotalCount, messages.TotalPages);
+
+            return Ok(messagesToReturn);
+        }
+
+        [HttpGet("unread/{recipientId}")]
+        public async Task<IActionResult> GetUnreadMessages(int userId, int recipientId)
+        {
+            if(userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return Unauthorized();
+
+            var currentLoggedInUser = await _repo.GetUser(userId);
+            if(currentLoggedInUser == null)
+                return Unauthorized();
+
+            var messages = await _repo.GetUnreadMessages(userId, recipientId);
+            var messagesToReturn = _mapper.Map<IEnumerable<MessageToReturnDto>>(messages);
+
+            return Ok(messagesToReturn);
         }
 
         [HttpPost]
@@ -105,6 +127,7 @@ namespace DatingApp.API.Controller
                 return Unauthorized();
             
             var messageFromRepo = await _repo.GetMessage(id);
+
             if(userId == messageFromRepo.SenderId)
                 messageFromRepo.SenderDeleted = true;
 
@@ -133,6 +156,25 @@ namespace DatingApp.API.Controller
             
             message.IsRead = true;
             message.ReadDate = DateTime.Now;
+
+            await _repo.SaveAll();
+
+            return NoContent();
+        }
+
+        [HttpPost("{id}/receive")]
+        public async Task<IActionResult> MarkMessageReceived(int userId, int id) 
+        {
+            if(userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return Unauthorized();
+            
+            var message = await _repo.GetMessage(id);
+
+            if(message.RecipientId != userId)
+                return Unauthorized();
+            
+            message.IsReceived = true;
+            message.ReceivedDate = DateTime.Now;
 
             await _repo.SaveAll();
 

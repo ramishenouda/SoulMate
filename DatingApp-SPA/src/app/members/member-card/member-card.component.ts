@@ -26,4 +26,12 @@ export class MemberCardComponent implements OnInit {
       this.alertify.error(error);
     });
   }
+
+  unlike(recipientId: number) {
+    this.userService.unlike(this.authService.currentUser.id, recipientId).subscribe(() => {
+      this.alertify.success('Unliked');
+    }, error => {
+      this.alertify.error(error);
+    });
+  }
 }

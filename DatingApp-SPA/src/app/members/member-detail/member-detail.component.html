@@ -1,6 +1,6 @@
 <div class="container mt-4">
   <div class="row ml-1">
-    <h1> {{ user.knownAs }}'s Profile</h1>
+    <h5> {{ user.knownAs }}'s Profile</h5>
   </div>
   <div class="row">
     <div class="col-sm-4">
@@ -8,21 +8,31 @@
         <img src="{{ user.photoUrl ||  '../../../assets/user.png' }}" alt="{{ user.knownAs }}" class="card-img-top img-thumbnail">
         <div class="card-body">
           <div>
-            <strong>Location: </strong> <p>{{ user.city }}, {{ user.country }}</p>
+            <p>
+              <strong>Location: </strong>  {{ user.city }}, {{ user.country }} 
+            </p>
           </div>
           <div>
-            <strong>Age: </strong> <p>{{ user.age }}</p>
+            <p>
+              <strong>Age: </strong>  {{ user.age }} 
+            </p>
           </div>
           <div>
-            <strong>Last active: </strong> <p>{{ user.lastActive | timeAgo}}</p>
+            <p>
+              <strong>Last active: </strong>  {{ user.lastActive | timeAgo}} 
+            </p>
           </div>
           <div>
-            <strong>Member since: </strong> <p> {{ user.created | date: 'mediumDate' }} </p>
+            <p>
+              <strong>Member since: </strong> {{ user.created | date: 'mediumDate' }} 
+            </p>
           </div>
         </div>
         <div class="card-footer">
           <div class="btn-group d-flex">
-            <button class="btn btn-primary w-100">Like</button>
+            <button *ngIf="isLiked === 0" class="btn btn-primary w-100" id="likeButton" (click)="sendLike()">Like</button>
+            <button *ngIf="isLiked === 1" class="btn btn-primary w-100" id="likeButton" (click)="unlike()">Unlike</button>
+            <button *ngIf="isLiked === 2" class="btn btn-primary w-100" id="likeButton" [disabled]=true>We Love You</button>
             <button class="btn btn-success w-100" (click)="selectTab(2)">Message</button>
           </div>
         </div>
@@ -31,7 +41,7 @@
     <div class="col-sm-8">
       <div class="tab-panel">
         <tabset class="member-tabset" #tabSet>
-          <tab heading="About">
+          <tab heading="About" (selectTab)="triggerMessageTap(false)">
             <h4>Description</h4>
             <p>{{ user.introduction }}</p>
             
@@ -41,11 +51,11 @@
             <h4>Interests</h4>
             <p>{{ user.interests }}</p>
           </tab>
-          <tab heading="Photos">
+          <tab heading="Photos" (selectTab)="triggerMessageTap(false)">
             <ngx-gallery [options]="galleryOptions" [images]="galleryImages" class="ngx-gallery"></ngx-gallery>
           </tab>
-          <tab heading="Messages">
-            <app-member-messages [recipientId]="user.id"></app-member-messages>
+          <tab heading="Messages" (selectTab)="triggerMessageTap(true)">
+            <app-member-messages [activatedTap]="messageTap" [recipient]="user"></app-member-messages>
           </tab>
         </tabset>
       </div>

@@ -13,6 +13,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using DatingApp.API.Hubs;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace DatingApp.API
 {
@@ -28,6 +31,7 @@ namespace DatingApp.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHttpContextAccessor();
             services.AddDbContext<DataContext>(x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
             services.AddAutoMapper(typeof(Startup).Assembly);
             services.AddControllers().AddNewtonsoftJson(opt =>
@@ -35,6 +39,7 @@ namespace DatingApp.API
                 opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             });
             services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
+            services.AddSignalR();
             services.AddCors();
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IDatingRepository, DatingRepository>();
@@ -48,6 +53,18 @@ namespace DatingApp.API
                             .GetBytes(Configuration.GetSection("AppSettings:Token").Value)),
                         ValidateIssuer = false,
                         ValidateAudience = false
+                    };
+
+                    options.Events = new JwtBearerEvents 
+                    {
+                        OnMessageReceived = context => 
+                        {
+                            var signalRTokenHeader = context.Request.Query["Authorization"];
+                            if (!string.IsNullOrEmpty(signalRTokenHeader)) {
+                                context.Token = signalRTokenHeader.FirstOrDefault();
+                            }
+                            return Task.CompletedTask;
+                        }
                     };
                 });
         }
@@ -77,12 +94,14 @@ namespace DatingApp.API
             }
 
             app.UseRouting();
-            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            app.UseCors(x => x.WithOrigins("http://localhost:4200").
+                AllowAnyMethod().AllowAnyHeader().AllowCredentials());
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<ChatHub>("/chatHub");
             });
         }
     }

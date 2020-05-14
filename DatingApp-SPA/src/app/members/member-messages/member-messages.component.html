@@ -1,15 +1,25 @@
 <div class="card">
-  <div class="card-body">
-    <div *ngIf="messages?.length === 0">
+  <div *ngIf="canGetMessages == 0" class="card-body" id="loader">
+    <i class="fa fa-spinner fa-spin fa-4x"></i>
+  </div>
+
+  <div class="card-body" id="messagesList">
+    <div *ngIf="messages?.length == 0 && messageToSend.senderId != messageToSend.recipientId">
       <p>
         No messages yet... maybe start by saying Hi :D
       </p>
     </div>
 
-    <ul #messagesList class="chat">
-      <li class="mb-1" *ngFor="let message of messages"> 
+    <div *ngIf="messages?.length == 0 && user.id == recipient.id">
+      <p>
+        The begging of chat with yourself :D
+      </p>
+    </div>
+
+    <ul class="chat">
+      <li class="mb-1" *ngFor="let message of messages">
         <!-- to them -->
-        <div *ngIf="message.senderId == recipientId">
+        <div *ngIf="message.senderId == recipient.id">
           <span class="chat-img float-left">
             <img src="{{ message.senderPhotoUrl }}" alt="{{ message.senderKnownAs }}" class="rounded-circle mr-1">
           </span>
@@ -18,15 +28,25 @@
               <strong class="primary-font"> {{ message.senderKnownAs }} </strong>
               <small class="text-muted">
                 <span class="fa fa-clock-o">
-                  {{ message.sentDate | timeAgoMessages }}
+                  <span *ngIf="message.sentDate !== null && message.sentDate !== defaultDate" >
+                    {{ message.sentDate | timeAgoMessages }}
+                  </span>
                 </span>
               </small>
             </div>
-            <p> {{ message.content }} </p>
+            <p *ngIf="message.sentDate != null && message.sentDate != defaultDate" class="text-info">
+                {{ message.content }} 
+            </p>
+            <p *ngIf="message.sentDate == defaultDate" class="text-muted">
+                {{ message.content }} 
+            </p>
+            <p *ngIf="message.sentDate == null" class="text-danger">
+                {{ message.content }} 
+            </p>
           </div>
         </div>
         <!-- to me -->
-        <div *ngIf="message.senderId != recipientId">
+        <div *ngIf="message.senderId != recipient.id">
           <span class="chat-img float-left">
             <img src="{{ message.senderPhotoUrl }}" alt="{{ message.senderKnownAs }}" class="rounded-circle mr-1">
           </span>
@@ -35,19 +55,32 @@
               <strong class="primary-font"> {{ message.senderKnownAs }} </strong>
               <small class="text-muted">
                 <span class="fa fa-clock-o">
-                  {{ message.sentDate | timeAgoMessages }}
+                  <span *ngIf="message.sentDate !== null && message.sentDate !== defaultDate" >
+                    {{ message.sentDate | timeAgoMessages }}
+                  </span>
                 </span>
               </small>
               <small class="text-muted float-right">
-                <span *ngIf="!message.isRead" class="text-danger">
-                  (Unread)
+                <span *ngIf="!message.isRead && !message.isReceived && message.sentDate != defaultDate" class="text-muted">
+                  <i style="font-size: 16px;" class="fa fa-angle-up"></i>
                 </span>
                 <span *ngIf="message.isRead" class="text-success">
-                  Read {{ message.readDate | timeAgoMessages }}
+                  <i style="font-size: 16px;" class="fa fa-angle-double-up"></i> {{ message.readDate | timeAgoMessages }} 
+                </span>
+                <span *ngIf="!message.isRead && message.isReceived" class="text-muted">
+                  <i style="font-size: 16px;" class="fa fa-angle-double-up"></i> 
                 </span>
               </small>
             </div>
-            <p> {{ message.content }} </p>
+            <p *ngIf="message.sentDate != null && message.sentDate != defaultDate" class="text-info">
+                {{ message.content }} 
+            </p>
+            <p *ngIf="message.sentDate == defaultDate" class="text-muted">
+                {{ message.content }} 
+            </p>
+            <p *ngIf="message.sentDate == null" class="text-danger">
+                {{ message.content }} 
+            </p>
           </div>
         </div>
       </li>
@@ -55,9 +88,10 @@
   </div>
 
   <div class="card-footer">
-    <form #messageForm="ngForm" (ngSubmit)="messageForm.valid && sendMessage()">
+    <form #messageForm="ngForm" (ngSubmit)="messageForm.valid && sendMessage(messages.length)">
       <div class="input-group">
         <input type="text" class="form-control input-sm" placeholder="Send a message"
+          autocomplete="off"
           [(ngModel)]="newMessage.content" name="content" required>
         <div class="input-group-append">
           <button class="btn btn-primary" [disabled]="!messageForm.valid">Send</button>

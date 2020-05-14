@@ -39,6 +39,8 @@ import { TimeAgoPipeMessages } from './_pipes/time-ago-messages.pipe';
 import { ListResolver } from './_resolvers/lists.resolver';
 import { MessagesResolver } from './_resolvers/messages.resolver';
 import { MemberMessagesComponent } from './members/member-messages/member-messages.component';
+import { HubService } from './_services/hub.service';
+import { HubHelperService } from './_services/hub-helper.service';
 
 export function tokenGetter() {
    return localStorage.getItem('token');
@@ -87,6 +89,8 @@ export function tokenGetter() {
       AuthService,
       ErrorInterceptorProvider,
       AlertifyService,
+      HubService,
+      HubHelperService,
       AuthGuard,
       UserService,
       ListResolver,
@@ -94,7 +98,7 @@ export function tokenGetter() {
       MemberDetailResolver,
       MemberProfileResolver,
       MessagesResolver,
-      PreventUnsavedChanges
+      PreventUnsavedChanges,
    ],
    bootstrap: [
       AppComponent

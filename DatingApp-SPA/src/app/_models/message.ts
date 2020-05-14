@@ -1,4 +1,4 @@
-export interface Message {
+export class Message {
     id: number;
     senderId: number;
     senderKnownAs: string;
@@ -9,5 +9,11 @@ export interface Message {
     content: string;
     isRead: boolean;
     readDate: Date;
+    isReceived: boolean;
+    receivedDate: Date;
     sentDate: Date;
+
+    Message() {
+        console.log('here');
+    }
 }

@@ -19,9 +19,21 @@
     width: 50px;
 }
 
-.card-body {
+#messagesList, #loader {
     overflow-y: scroll;
-    height: 400px;
+    height: 421px;
+    position: absolute;
+    width: 100%;
+}
+
+#loader {
+    z-index: 10;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.card-footer {
+    margin-top: 421px;
 }
 
 ul, ul li {

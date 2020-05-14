@@ -14,6 +14,8 @@ namespace DatingApp.API.Dtos
         public string Content { get; set; }
         public bool IsRead { get; set; }  
         public DateTime? ReadDate { get; set; }
+        public bool IsReceived { get; set; }  
+        public DateTime? ReceivedDate { get; set; }
         public DateTime SentDate { get; set; }
     }
 }

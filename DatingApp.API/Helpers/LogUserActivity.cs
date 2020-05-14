@@ -16,6 +16,9 @@ namespace DatingApp.API.Helpers
             var repo = resultContext.HttpContext.RequestServices.GetService<IDatingRepository>();
 
             var user = await repo.GetUser(userId);
+            if(user == null) {
+                throw new Exception("Unauthorized");
+            }
             user.LastActive = DateTime.Now;
 
             await repo.SaveAll();

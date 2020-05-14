@@ -27,7 +27,7 @@ namespace DatingApp.API.Migrations
                         column: x => x.LikerId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

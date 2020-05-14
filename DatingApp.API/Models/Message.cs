@@ -11,7 +11,9 @@ namespace DatingApp.API.Models
         public User Recipient { get; set; }
         public string Content { get; set; }
         public bool IsRead { get; set; }  
+        public bool IsReceived { get; set; }  
         public DateTime? ReadDate { get; set; }
+        public DateTime? ReceivedDate { get; set; }
         public DateTime SentDate { get; set; }
         public bool SenderDeleted { get; set; }
         public bool RecipientDeleted { get; set; }

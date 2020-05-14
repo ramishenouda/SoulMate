@@ -4,7 +4,6 @@ import { UserService } from 'src/app/_services/user.service';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { ActivatedRoute } from '@angular/router';
 import { Pagination, PaginatedResult } from 'src/app/_models/pagination';
-import { defaultLocaleMonths } from 'ngx-bootstrap/chronos/locale/locale.class';
 
 @Component({
   selector: 'app-member-list',
@@ -47,7 +46,7 @@ export class MemberListComponent implements OnInit {
 
   loadUsers() {
     this.userService
-      .getUsers(this.pagination.currentPage, this.pagination.itemsPerPage, this.userParams)
+      .getUsers(this.pagination.currentPage, this.pagination.itemsPerPage, this.userParams, 'noConnection')
         .subscribe((res: PaginatedResult<User[]>) => {
           this.users = res.result;
           this.pagination = res.pagination;

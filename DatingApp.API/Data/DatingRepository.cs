@@ -26,6 +26,11 @@ namespace DatingApp.API.Data
             _context.Remove(Entity);
         }
 
+        public void unlike(Like like)
+        {
+            _context.Likes.Remove(like);
+        }
+
         public async Task<Like> GetLike(int userId, int recipientId)
         {
             return await _context.Likes.FirstOrDefaultAsync(u => u.LikerId == userId && u.LikeeId == recipientId);
@@ -51,7 +56,8 @@ namespace DatingApp.API.Data
             var users = _context.Users.Include(p => p.Photos).AsQueryable();
 
             users = users.Where(u => u.Id != userParams.UserId);
-            users = users.Where(u => u.Gender == userParams.Gender);
+            if(userParams.Gender != "mix")
+                users = users.Where(u => u.Gender == userParams.Gender);
             
             if(userParams.Likers)
             {
@@ -63,6 +69,12 @@ namespace DatingApp.API.Data
             {
                 var userLikees = await GetUserLikes(userParams.UserId, userParams.Likers);
                 users = users.Where(u => userLikees.Contains(u.Id));
+            }
+
+            if(userParams.NoConnection)
+            {
+                var userLikees = await GetUserLikes(userParams.UserId, userParams.Likers);
+                users = users.Where(u => !userLikees.Contains(u.Id));
             }
 
             if(!string.IsNullOrEmpty(userParams.OrderBy))
@@ -140,17 +152,53 @@ namespace DatingApp.API.Data
             return await PagedList<Message>.CreateAsync(messages, messageParams.PageNumber, messageParams.PageSize);
         }
 
-        public async Task<IEnumerable<Message>> GetMessagesThread(int userId, int recipientId, int fromMessage = -1)
+        public async Task<PagedList<Message>> GetMessagesThread(int userId, int recipientId, MessageParams messageParams, int maximumId = -1)
         {
+            var messages = _context.Messages
+                .Include(u => u.Sender).ThenInclude(p => p.Photos)
+                .Include(u => u.Recipient).ThenInclude(p => p.Photos).AsQueryable();
+            
+            if(maximumId != -1)
+                messages = messages.Where(m => m.Id < maximumId);
+            
+            messages = messages.Where(m => 
+            (
+                (m.RecipientId == userId && m.SenderId == recipientId && m.RecipientDeleted == false)
+                                                        ||
+                (m.RecipientId == recipientId && m.SenderId == userId && m.SenderDeleted == false)
+            )).OrderByDescending(m => m.SentDate);
+
+            return await PagedList<Message>.CreateAsync(messages, messageParams.PageNumber, messageParams.PageSize);
+        }
+
+        public async Task<IEnumerable<Message>> GetUnreadMessages(int userId, int recipientId)
+        {
+
+            var lastUnreadMessage = await _context.Messages.OrderByDescending(m => m.SentDate)
+            .LastOrDefaultAsync
+            (
+                m => m.IsRead == false
+            );
+
+            int lastUnreadMessageId;
+
+            if(lastUnreadMessage != null)
+                lastUnreadMessageId = lastUnreadMessage.Id;
+            else 
+                lastUnreadMessageId = 0;
+
             var messages = await _context.Messages
                 .Include(u => u.Sender).ThenInclude(p => p.Photos)
                 .Include(u => u.Recipient).ThenInclude(p => p.Photos)
-                .Where(m => ((m.RecipientId == userId && m.SenderId == recipientId && m.RecipientDeleted == false)
-                    || (m.RecipientId == recipientId && m.SenderId == userId && m.SenderDeleted == false))
-                    && m.Id > fromMessage)
-                .OrderByDescending(m => m.SentDate)
-                .ToListAsync();
-                
+                .Where(m => 
+            (
+                ((m.RecipientId == userId && m.SenderId == recipientId && m.RecipientDeleted == false)
+                                                        ||
+                (m.RecipientId == recipientId && m.SenderId == userId && m.SenderDeleted == false))
+                                                        &&
+                                                (m.Id >= lastUnreadMessageId)
+            )).OrderByDescending(m => m.SentDate).ToListAsync();
+
             return messages;
         }
     }

@@ -9,6 +9,7 @@ namespace DatingApp.API.Data
     {
         void Add<T>(T Entity) where T: class;
         void Delete<T>(T Entity) where T: class;
+        void unlike(Like like);
         Task<bool> SaveAll();
         Task<PagedList<User>> GetUsers(UserParams paginationParams);
         Task<User> GetUser(int id);
@@ -17,6 +18,7 @@ namespace DatingApp.API.Data
         Task<Like> GetLike(int userId, int recipientId);
         Task<Message> GetMessage(int id);
         Task<PagedList<Message>> GetMessagesForUser(MessageParams messageParams);
-        Task<IEnumerable<Message>> GetMessagesThread(int userId, int recipientId, int fromMessage = -1);
+        Task<PagedList<Message>> GetMessagesThread(int userId, int recipientId, MessageParams messageParams, int maximumId);
+        Task<IEnumerable<Message>> GetUnreadMessages(int userId, int recipientId);
     }
 }

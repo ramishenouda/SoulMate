@@ -5,6 +5,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { environment } from 'src/environments/environment';
 import { User } from '../_models/user';
 import { BehaviorSubject } from 'rxjs';
+import { HubService } from './hub.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,7 @@ export class AuthService {
   photoUrl = new BehaviorSubject<string>(environment.assetsPath + 'user.png');
   currentPhotoUrl = this.photoUrl.asObservable();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private hub: HubService) { }
 
   changeMemberPhoto(photoUrl: string) {
     this.photoUrl.next(photoUrl);
@@ -37,6 +38,7 @@ export class AuthService {
             // sets the current user to be equal to user
             this.setUser(user.user);
             this.changeMemberPhoto(this.currentUser.photoUrl);
+            this.hub.setupHub();
           }
         })
       );
@@ -48,6 +50,7 @@ export class AuthService {
 
   logOut() {
     localStorage.clear();
+    this.hub.disconnectHub();
   }
 
   loggedIn() {

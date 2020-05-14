@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../_services/user.service';
 import { AuthService } from '../_services/Auth.service';
 import { AlertifyService } from '../_services/alertify.service';
+import { MessageService } from '../_services/message.service';
 
 @Component({
   selector: 'app-messages',
@@ -16,8 +17,8 @@ export class MessagesComponent implements OnInit {
   pagination: Pagination;
   messageContainer = 'Unread';
 
-  constructor(private userService: UserService, private authService: AuthService,
-              private route: ActivatedRoute, private alertify: AlertifyService) { }
+  constructor(private userService: UserService, private messageService: MessageService,
+              private authService: AuthService, private route: ActivatedRoute, private alertify: AlertifyService) { }
 
   ngOnInit() {
     this.route.data.subscribe(data => {
@@ -27,7 +28,7 @@ export class MessagesComponent implements OnInit {
   }
 
   loadMessages() {
-    this.userService.getMessages(this.authService.decodedToken.nameid, this.pagination.currentPage,
+    this.messageService.getMessages(this.authService.decodedToken.nameid, this.pagination.currentPage,
       this.pagination.itemsPerPage, this.messageContainer).subscribe((res: PaginatedResult<Message[]>) => {
         this.messages = res.result;
         this.pagination = res.pagination;
@@ -38,7 +39,7 @@ export class MessagesComponent implements OnInit {
 
   deleteMessage(id: number) {
     this.alertify.confirm('Are you sure you want to delete this message ?', () => {
-      this.userService.deleteMessage(this.authService.decodedToken.nameid, id).subscribe(() => {
+      this.messageService.deleteMessage(this.authService.decodedToken.nameid, id).subscribe(() => {
         this.messages.splice(this.messages.findIndex(m => m.id === id), 1);
         this.alertify.success('Message has been deleted');
       }, error => {

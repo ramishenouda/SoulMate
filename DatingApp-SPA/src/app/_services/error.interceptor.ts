@@ -31,6 +31,7 @@ export class ErrorInterceptor implements HttpInterceptor {
               }
             }
           }
+
           return throwError(modelStateErrors || typeof serverError !== 'object' ? serverError : 'Server Error');
         }
       })

@@ -1,7 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
+@import '../node_modules/bootswatch/dist/united/bootstrap.css';
 @import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
-@import '../node_modules/bootswatch/dist/lux/bootstrap.min.css';
-@import '../node_modules/font-awesome/css/font-awesome.min.css';
+@import '../node_modules/@fortawesome/fontawesome-free/css/all.min.css';
 @import '../node_modules/alertifyjs/build/css/alertify.min.css';
 @import '../node_modules/alertifyjs/build/css/themes/bootstrap.min.css';
 @import '../node_modules/ngx-bootstrap/datepicker/bs-datepicker.css';
@@ -10,6 +10,7 @@
 * {
   font-family: 'Roboto', sans-serif;
 }
+
 .tab-panel {
     border: 1px solid #ddd;
     padding: 10px;
@@ -35,7 +36,7 @@
 }
   
 .member-tabset > .nav-tabs > li.active {
-  border-bottom: 4px solid #E95420;
+  border-bottom: 4px solid rgb(32, 169, 233);
   position: relative;
 }
 
@@ -53,7 +54,7 @@
   background-color: #fff;
   border: 0;
   border-top: 1px solid #eee;
-  padding: 15px 0;
+  padding-top: 15px;
 }
 
-.ngx-gallery { display: inline-block; margin-bottom: 20px; }
+.ngx-gallery { display: inline-block; }

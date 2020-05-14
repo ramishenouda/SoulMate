@@ -7,7 +7,7 @@
                 Main
             </button>
             <button class="btn btn-sm btn-danger" (click)="deletePhoto(photo.id)" [disabled]="photo.isMain">
-                <i class="fa fa-trash-o">
+                <i class="fas fa-trash">
             </i></button>
         </div>
     </div>
@@ -26,7 +26,7 @@
         (fileOver)="fileOverBase($event)"
         [uploader]="uploader"
         class="card bg-faded p-3 text-center mb-3 my-drop-zone">
-        <i class="fa fa-upload fa-3x"></i>
+        <i class="fas fa-upload fa-3x"></i>
         Drop Photos Here
       </div>
 
@@ -45,9 +45,6 @@
           <tr>
               <th width="50%">Name</th>
               <th>Size</th>
-              <th>Progress</th>
-              <th>Status</th>
-              <th>Actions</th>
           </tr>
           </thead>
           <tbody>
@@ -67,15 +64,15 @@
           </div>
           <button type="button" class="btn btn-success btn-s"
                   (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length">
-              <span class="fa fa-upload"></span> Upload
+              <span class="fas fa-upload"></span> Upload
           </button>
           <button type="button" class="btn btn-warning btn-s"
                   (click)="uploader.cancelAll()" [disabled]="!uploader.isUploading">
-              <span class="fa fa-ban"></span> Cancel
+              <span class="fas fa-ban"></span> Cancel
           </button>
           <button type="button" class="btn btn-danger btn-s"
                   (click)="uploader.clearQueue()" [disabled]="!uploader.queue.length">
-              <span class="fa fa-trash"></span> Remove
+              <span class="fas fa-trash"></span> Remove
           </button>
       </div>
 
