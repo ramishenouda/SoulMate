@@ -17,6 +17,7 @@ export class MemberDetailComponent implements OnInit {
   @ViewChild('tabSet', { static: true }) tabSet: TabsetComponent;
   user: User;
   messageTap: boolean; // used for reading messaging
+  isSoul: boolean;
   isLiked: number;
   galleryOptions: NgxGalleryOptions[];
   galleryImages: NgxGalleryImage[];
@@ -31,6 +32,15 @@ export class MemberDetailComponent implements OnInit {
         this.userService.isLiked(this.authService.currentUser.id, this.user.id).subscribe(
           value => {
             this.isLiked = value === true ? 1 : 0;
+          }, error => {
+            this.alertify.error('Error while retrieving some data');
+            this.router.navigate(['/lists']);
+          }
+        );
+
+        this.userService.checkUserSoul(this.authService.currentUser.id, this.user.id).subscribe(
+          value => {
+            this.isSoul = value;
           }, error => {
             this.alertify.error('Error while retrieving some data');
             this.router.navigate(['/lists']);
@@ -94,8 +104,8 @@ export class MemberDetailComponent implements OnInit {
 
   triggerMessageTap(value: boolean) {
     this.messageTap = value;
-    this.hubHelper.location = value ? 'memberMessageBox' : '';
-    this.hubHelper.deepLocation = value ? this.user.knownAs : '';
+    this.hubHelper.location = value ? 'messageBox' : '';
+    this.hubHelper.deepLocation = value ? this.user.id : 1;
   }
 
   sendLike() {
@@ -104,6 +114,14 @@ export class MemberDetailComponent implements OnInit {
     this.userService.sendLike(this.authService.currentUser.id, this.user.id).subscribe(() => {
       this.isLiked = 1;
       this.alertify.success('Liked');
+      this.userService.checkUserSoul(this.authService.currentUser.id, this.user.id).subscribe(
+        value => {
+          this.isSoul = value;
+        }, error => {
+          this.alertify.error('Error while retrieving some data');
+          this.router.navigate(['/lists']);
+        }
+      );
     }, error => {
       this.alertify.message('Calm down :D');
       (document.getElementById('likeButton') as HTMLInputElement).disabled = true;
@@ -113,6 +131,7 @@ export class MemberDetailComponent implements OnInit {
   unlike() {
     this.userService.unlike(this.authService.currentUser.id, this.user.id).subscribe(() => {
       this.isLiked = 0;
+      this.isSoul = false;
       this.alertify.success('Unliked');
     }, error => {
       this.alertify.error(error);

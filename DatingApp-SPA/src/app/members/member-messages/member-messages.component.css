@@ -8,6 +8,13 @@
     padding: 0;
 }
 
+.chat-mobile {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    height: 400px;
+}
+
 .chat li {
     padding-bottom: 10px;
     border-bottom: 1px dotted #B3A9A9;
@@ -19,21 +26,39 @@
     width: 50px;
 }
 
-#messagesList, #loader {
-    overflow-y: scroll;
-    height: 421px;
-    position: absolute;
-    width: 100%;
-}
-
 #loader {
     z-index: 10;
     text-align: center;
     vertical-align: middle;
 }
 
-.card-footer {
-    margin-top: 421px;
+.messages-list-profile, #loader {
+    overflow-y: auto;
+    height: 448px;
+    position: absolute;
+    width: 100%;
+}
+
+.messages-list-messages {
+    overflow-y: auto;
+    height: 600px;
+    position: absolute;
+    width: 100%;
+}
+
+#messageInput {
+    resize: none;
+    height: 40px;
+    overflow: hidden;
+}
+
+.card-footer-messages {
+    margin-top: 600px;
+    width: 100%;
+}
+
+.card-footer-profile {
+    margin-top: 448px;
 }
 
 ul, ul li {
@@ -42,4 +67,11 @@ ul, ul li {
     -ms-transform: scaleY(-1);
     -o-transform: scaleY(-1);
     transform: scaleY(-1);
+}
+
+.btn-group-xs > .btn, .btn-xs {
+    padding: .25rem .4rem;
+    font-size: .875rem;
+    line-height: .8;
+    border-radius: .2rem;
 }

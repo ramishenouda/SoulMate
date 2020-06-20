@@ -1,13 +1,13 @@
 import { Photo } from './photo';
 
-export interface User {
+export class User {
     id: number;
     username: string;
     knownAs: string;
     age: number;
     gender: string;
     created: Date;
-    lastActive: Date;
+    lastActive: any;
     photoUrl: string;
     city: string;
     country: string;
@@ -16,4 +16,6 @@ export interface User {
     introduction?: string;
     photos?: Photo[];
     canMessage: boolean;
+    isSoul: boolean;
+    likee: boolean;
 }

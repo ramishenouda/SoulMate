@@ -51,18 +51,6 @@ export class UserService {
       );
   }
 
-  sendLike(id: number, recipientId: number) {
-    return this.http.post(this.baseUrl + 'users/' + id + '/like/' + recipientId, {});
-  }
-
-  unlike(id: number, recipientId: number) {
-    return this.http.post(this.baseUrl + 'users/' + id + '/unlike/' + recipientId, {});
-  }
-
-  isLiked(id: number, recipientId: number) {
-    return this.http.get<boolean>(this.baseUrl + 'users/' + id + '/isliked/' + recipientId);
-  }
-
   getUser(id: number): Observable<User> {
     return this.http.get<User>(this.baseUrl + 'users/' + id);
   }
@@ -77,5 +65,43 @@ export class UserService {
 
   deletePhoto(userId: number, photoId: number) {
     return this.http.delete(this.baseUrl + 'users/' + userId + '/photos/' + photoId);
+  }
+
+  sendLike(id: number, recipientId: number) {
+    return this.http.post(this.baseUrl + 'likes/' + id + '/like/' + recipientId, {});
+  }
+
+  unlike(id: number, recipientId: number) {
+    return this.http.post(this.baseUrl + 'likes/' + id + '/unlike/' + recipientId, {});
+  }
+
+  isLiked(id: number, recipientId: number) {
+    return this.http.get<boolean>(this.baseUrl + 'likes/' + id + '/isliked/' + recipientId);
+  }
+
+  getUserSouls(id: number, page?, itemsPerPage?) {
+    const paginatedResult: PaginatedResult<User[]> = new PaginatedResult<User[]>();
+
+    let params = new HttpParams();
+    params = params.append('userId', id.toString());
+    if (page && itemsPerPage) {
+      params = params.append('pageNumber', page);
+      params = params.append('pageSize', itemsPerPage);
+    }
+
+    return this.http.get<User[]>(this.baseUrl + 'users/' + id + '/souls', {observe: 'response', params})
+      .pipe(
+        map(response => {
+          paginatedResult.result = response.body;
+          if (response.headers.get('Pagination')) {
+            paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'));
+          }
+          return paginatedResult;
+        })
+      );
+  }
+
+  checkUserSoul(id: number, recipientId: number) {
+    return this.http.get<boolean>(this.baseUrl + 'likes/' + id + '/soul/' + recipientId);
   }
 }

@@ -29,7 +29,7 @@ namespace DatingApp.API.Hubs
             _contextAccessor = contextAccessor;
         }
 
-        public async Task<string> SendMessage(int userId, int recipientId, string content)
+        public async Task<string> SendMessage(int userId, int recipientId, string content, string hubConnectionId)
         {
             var messageForCreationDto = new MessageForCreationDto
             {
@@ -57,21 +57,24 @@ namespace DatingApp.API.Hubs
                 throw new Exception("User no longer exist");
             }
 
-            var message = _mapper.Map<Message>(messageForCreationDto);
-            _repo.Add(message);
+            if(await _repo.CheckUserSoul(messageForCreationDto.SenderId, messageForCreationDto.RecipientId) == false)
+                throw new Exception("Unauthorize");
 
+            var message = _mapper.Map<Message>(messageForCreationDto);
+
+            _repo.Add(message);
             if (await _repo.SaveAll())
             {
                 MyUsers.TryGetValue(messageForCreationDto.SenderId, out existingUserConnectionIds);
                 if(userId != recipientId)
                 {
-                    Console.WriteLine(userId);
-                    Console.WriteLine(recipientId);
-                    if(await EmitMessageToUser(message.RecipientId, message.Id, message.Content, message.SentDate))
-                    {
-                        Console.WriteLine("Yup");
-                        await Clients.Clients(existingUserConnectionIds).SendAsync("messageReceived", message.Id, message.SentDate);
-                    }
+                    if(await EmitMessageToUser(message.SenderId, message.RecipientId, message.Id, message.Content, message.SentDate))
+                        await Clients.Clients(existingUserConnectionIds).SendAsync("messageReceived", recipientId, 
+                        message.Id, message.SentDate, message.Content, true, hubConnectionId);
+                    else 
+                        await Clients.Clients(existingUserConnectionIds).SendAsync("messageReceived", recipientId, message.Id, 
+                            message.SentDate, message.Content, false, hubConnectionId);
+
                 }
                 return message.SentDate.ToString() + '-' + message.Id;
             }
@@ -79,7 +82,50 @@ namespace DatingApp.API.Hubs
             throw new Exception("Failed to send the message");
         }
 
-        public async Task<bool> EmitMessageToUser(int recipientId, int messageId, string message, DateTime sentDate)
+        public async Task<string> MarkMessageAsRead(int senderId, int messageId)
+        {
+            List<string> existingUserConnectionIds;
+            var message = await _repo.GetMessage(messageId);
+            if(message == null)
+                return new DateTime(1999, 05, 11).ToString();
+
+            message.IsRead = true;
+            message.ReadDate = DateTime.Now;
+            if(await _repo.SaveAll())
+            {
+                MyUsers.TryGetValue(senderId, out existingUserConnectionIds);
+                if(existingUserConnectionIds != null)
+                    await Clients.Clients(existingUserConnectionIds).SendAsync("markMessageAsRead", message.ReadDate.ToString(), message.Id);
+                return message.ReadDate.ToString();
+            }
+
+            else
+                return new DateTime(1999, 05, 11).ToString();
+        }
+        public async Task<string> MarkMessageAsReceived(int senderId, int messageId)
+        {
+            List<string> existingUserConnectionIds;
+            var message = await _repo.GetMessage(messageId);
+            if(message == null)
+                return new DateTime(1999, 05, 11).ToString();
+
+            message.IsReceived = true;
+            message.ReceivedDate = DateTime.Now;
+            if(await _repo.SaveAll())
+            {
+                MyUsers.TryGetValue(senderId, out existingUserConnectionIds);
+                
+                if(existingUserConnectionIds != null)
+                    await Clients.Clients(existingUserConnectionIds).SendAsync("markMessageAsReceived", message.ReceivedDate.ToString(), message.Id);
+
+                return message.ReceivedDate.ToString();
+            }
+
+            else
+                return new DateTime(1999, 05, 11).ToString();
+        }
+
+        public async Task<bool> EmitMessageToUser(int senderId, int recipientId, int messageId, string message, DateTime sentDate)
         {
             List<string> existingUserConnectionIds;
             MyUsers.TryGetValue(recipientId, out existingUserConnectionIds);
@@ -91,14 +137,15 @@ namespace DatingApp.API.Hubs
                 messageFromRepo.IsReceived = true;
                 messageFromRepo.ReceivedDate = DateTime.Now;
 
-                await _repo.SaveAll();
+                if(await _repo.SaveAll())
+                {
+                    await Clients.Clients(existingUserConnectionIds).SendAsync
+                    (
+                        "receiveMessage", messageId, message, sentDate, messageFromRepo.SenderId, messageFromRepo.Sender.KnownAs
+                    );
 
-                await Clients.Clients(existingUserConnectionIds).SendAsync
-                (
-                    "receiveMessage", messageId, message, sentDate, messageFromRepo.Sender.KnownAs
-                );
-
-                return true;
+                    return true;
+                }
             }
 
             return false;
@@ -106,8 +153,6 @@ namespace DatingApp.API.Hubs
 
         public override Task OnConnectedAsync()
         {
-            Console.WriteLine("------------------------------------------------");
-            Console.WriteLine("Connection");
             Trace.TraceInformation("MapHub started. ID: {0}", Context.ConnectionId);
 
             var userId = int.Parse(_contextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -127,15 +172,6 @@ namespace DatingApp.API.Hubs
 
             // Add to the global dictionary of connected users
             MyUsers.TryAdd(userId, existingUserConnectionIds);
-
-            foreach (var user in MyUsers)
-            {
-                Console.WriteLine("The user is connected with : " + user.Key);
-                foreach (var value in MyUsers[user.Key])
-                {
-                    Console.WriteLine("\t" + value);
-                }
-            }
 
             return base.OnConnectedAsync();
         }
@@ -157,25 +193,6 @@ namespace DatingApp.API.Hubs
                 // just delete the userName key from the ConnectedUsers concurent dictionary
                 List<string> garbage; // to be collected by the Garbage Collector
                 MyUsers.TryRemove(userId, out garbage);
-            }
-
-            Console.WriteLine("------------------------------------------------");
-            Console.WriteLine("Disconnection");
-            foreach (var user in MyUsers)
-            {
-                Console.WriteLine("The user is connected with : " + user.Key);
-                try 
-                {
-                    foreach (var value in MyUsers[user.Key])
-                    {
-                        Console.WriteLine("\t" + value);
-                    }
-                } 
-                catch (KeyNotFoundException) 
-                {
-                    Console.WriteLine("Key Exception"); 
-                    continue;
-                }
             }
 
             return base.OnDisconnectedAsync(ex);

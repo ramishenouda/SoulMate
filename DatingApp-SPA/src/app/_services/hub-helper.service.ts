@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 })
 export class HubHelperService {
   public location = 'home';
-  public deepLocation: string;
+  public deepLocation: number;
 
 constructor() { }
 

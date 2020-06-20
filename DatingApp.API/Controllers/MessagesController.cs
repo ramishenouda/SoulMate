@@ -34,10 +34,34 @@ namespace DatingApp.API.Controller
 
             var messageFromRepo = await _repo.GetMessage(id);
 
+
             if(messageFromRepo == null)
                 return NotFound();
 
-            return Ok(messageFromRepo);
+            var messageToReturn = _mapper.Map<MessageToReturnDto>(messageFromRepo);
+            return Ok(messageToReturn);
+        }
+
+        [HttpGet("lastMessage/{recipientId}")]
+        public async Task<IActionResult> GetLastMessage(int userId, int recipientId)
+        {
+            var sender = await _repo.GetUser(userId);
+            if(sender.Id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return Unauthorized();
+
+            var recipient = await _repo.GetUser(recipientId);
+
+            var messageFromRepo = await _repo.GetLastMessage(userId, recipientId);
+            
+            if(messageFromRepo == null)
+                return Ok(new { content =  "" , sentDate = new DateTime()});
+
+            return Ok(new 
+            { 
+                content = messageFromRepo.Content,
+                sentDate = messageFromRepo.SentDate,
+                senderId = messageFromRepo.SenderId
+            });
         }
 
         [HttpGet]
@@ -108,6 +132,11 @@ namespace DatingApp.API.Controller
             if(recipient == null)
                 return BadRequest("Could not find user");
             
+            var usersSouled = await _repo.CheckUserSoul(userId, messageForCreationDto.RecipientId);
+
+            if (!usersSouled && sender.Id != recipient.Id)
+                return Unauthorized();
+
             var message = _mapper.Map<Message>(messageForCreationDto);
             _repo.Add(message);
 

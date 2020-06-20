@@ -13,7 +13,7 @@
   </div>
 
   <div class="form-group">
-    <input type="text" class="form-control" formControlName="username" placeholder="Username"
+    <input type="text" class="form-control" formControlName="username" placeholder="Username (used for login)"
       [ngClass]="{'is-invalid': registerForm.get('username').errors && registerForm.get('username').touched}">
     <div class="invalid-feedback">Username is required</div>
   </div>
@@ -28,8 +28,8 @@
   </div>
 
   <div class="form-group">
-    <input class="form-control" placeholder="Date of Birth" formControlName="dateOfBirth" type="text"
-      placeholder="mm/dd/yyyy"
+    <input class="form-control" formControlName="dateOfBirth" type="text"
+      placeholder="birthday (mm/dd/yyyy)"
       bsDatepicker [bsConfig]="bsConfig"
       [ngClass]="{'is-invalid': registerForm.get('dateOfBirth').errors && registerForm.get('dateOfBirth').touched}">
     <div class="invalid-feedback"

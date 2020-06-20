@@ -16,7 +16,11 @@ namespace DatingApp.API.Data
         Task<Photo> GetPhoto(int id);
         Task<List<Photo>> GetMainPhoto(int userId);
         Task<Like> GetLike(int userId, int recipientId);
+        Task<IEnumerable<int>> GetUserLikes(int userId, bool likers);
+        Task<List<User>> GetUserSouls(SoulParams soulParams);
+        Task<bool> CheckUserSoul(int userId, int recipientId);
         Task<Message> GetMessage(int id);
+        Task<Message> GetLastMessage(int userId, int recipientId);
         Task<PagedList<Message>> GetMessagesForUser(MessageParams messageParams);
         Task<PagedList<Message>> GetMessagesThread(int userId, int recipientId, MessageParams messageParams, int maximumId);
         Task<IEnumerable<Message>> GetUnreadMessages(int userId, int recipientId);

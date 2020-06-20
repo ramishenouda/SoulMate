@@ -49,84 +49,6 @@ namespace DatingApp.API.Controllers
             return Ok(usersToReturn);
         }
 
-        [HttpPost("{id}/like/{recipientId}")]
-        public async Task<IActionResult> LikeUser(int id, int recipientId)
-        {
-            if(id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
-                return Unauthorized();
-            
-            var like = await _repo.GetLike(id, recipientId);
-
-            if(like != null)
-                return BadRequest("You already like this user");
-            
-            var recipient = await _repo.GetUser(recipientId);
-            var sender = await _repo.GetUser(id);
-
-            if(await _repo.GetUser(recipientId) == null)
-                return NotFound("User not found");
-            
-            if(sender == null)
-                return Unauthorized();
-
-            like = new Like
-            {
-                LikerId = id,
-                LikeeId = recipientId,
-                Likee = recipient,
-                Liker = sender
-            };
-
-            _repo.Add<Like>(like);
-
-            if(await _repo.SaveAll())
-                return Ok();
-
-            return BadRequest("Failed to like user");
-        }
-
-        [HttpPost("{id}/unlike/{recipientId}")]
-        public async Task<IActionResult> UnlikeUser(int id, int recipientId)
-        {
-            if(id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
-                return Unauthorized();
-            
-            var recipient = await _repo.GetUser(recipientId);
-            var sender = await _repo.GetUser(id);
-
-            if(recipient == null)
-                return NotFound("User not found");
-
-            if(sender == null)
-                return Unauthorized();
-
-            var like = await _repo.GetLike(id, recipientId);
-
-            if(like == null)
-                return BadRequest("You already unliked this user");
-
-            _repo.Delete(like);
-
-            if(await _repo.SaveAll())
-                return Ok();
-
-            return BadRequest("Failed to unlike user");
-        }
-
-        [HttpGet("{id}/isliked/{recipientId}")]
-        public async Task<IActionResult> GetLike(int id, int recipientId) 
-        {
-            if(id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
-                return Unauthorized();
-
-            var like = await _repo.GetLike(id, recipientId);
-
-            if(like != null)
-                return Ok(true);
-            
-            return Ok(false);
-        }
-
         [HttpGet("{id}", Name = "GetUser")]
         public async Task<IActionResult> GetUser(int id)
         {
@@ -134,6 +56,26 @@ namespace DatingApp.API.Controllers
             var userToReturn = _mapper.Map<UserForDetailedDto>(user);
 
             return Ok(userToReturn);
+        }
+
+        [HttpGet("{id}/souls")]
+        public async Task<IActionResult> GetUserSouls([FromQuery]SoulParams soulParams)
+        {
+            if(soulParams.UserId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return Unauthorized();
+
+            var user = await _repo.GetUser(soulParams.UserId);
+
+            if(user == null)
+                return Unauthorized();
+
+            var souls = await _repo.GetUserSouls(soulParams);
+            
+            var userSoulsToReturn = _mapper.Map<IEnumerable<UserForListDto>>(souls);
+
+            // Response.AddPagination(souls.CurrentPage, souls.PageSize, souls.TotalCount, souls.TotalPages);
+
+            return Ok(userSoulsToReturn);
         }
 
         [HttpPut("{id}")]

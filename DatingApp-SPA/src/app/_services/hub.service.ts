@@ -16,7 +16,7 @@ export class HubService {
  setupHub() {
    if (localStorage.getItem('user') !== null) {
       this.hubConnection = new signalR.HubConnectionBuilder()
-       .withUrl(`http://localhost:5000/chatHub?Authorization=${localStorage.getItem('token')}`)
+       .withUrl(`chatHub?Authorization=${localStorage.getItem('token')}`)
        .build();
 
       this.hubConnection.start().catch(error => {
@@ -32,8 +32,8 @@ export class HubService {
   }
 
   onReceivedMessage() {
-    this.hubConnection.on('receiveMessage', (messageId, message, sentDate, senderKnownAs) => {
-      if (this.hubHelper.location !== 'messageBox' && this.hubHelper.deepLocation !== senderKnownAs) {
+    this.hubConnection.on('receiveMessage', (messageId, message, sentDate, senderId, senderKnownAs) => {
+      if (this.hubHelper.location !== 'messageBox' && this.hubHelper.deepLocation !== senderId) {
         let messageForNotfication = '';
         let index = 0;
         while (messageForNotfication.length < 55 && index < message.length) {

@@ -28,11 +28,33 @@ namespace DatingApp.API
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        // public void ConfigureDevelopmentServices(IServiceCollection services)
+        // {
+        //     services.AddDbContext<DataContext>(x => x.UseSqlite
+        //     (Configuration.GetConnectionString("DefaultConnection")));
+
+        //     Console.WriteLine(Configuration.GetConnectionString("DefaultConnection"));
+            
+        //     ConfigureServices(services);
+        // }
+
+        // public void ConfigureProductionServices(IServiceCollection services)
+        // {
+        //     services.AddDbContext<DataContext>(x => x.UseMySql
+        //     (Configuration.GetConnectionString("DefaultConnection")));
+
+        //     Console.WriteLine(Configuration.GetConnectionString("DefaultConnection"));
+
+        //     ConfigureServices(services);
+        // }
+
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<DataContext>(x => x.UseSqlite
+            (Configuration.GetConnectionString("DefaultConnection")));
+
             services.AddHttpContextAccessor();
-            services.AddDbContext<DataContext>(x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+
             services.AddAutoMapper(typeof(Startup).Assembly);
             services.AddControllers().AddNewtonsoftJson(opt =>
             {
@@ -69,7 +91,6 @@ namespace DatingApp.API
                 });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -84,7 +105,6 @@ namespace DatingApp.API
                         var error = context.Features.Get<IExceptionHandlerFeature>();
                         if(error != null)
                         {
-                            Console.WriteLine(error.Error.Message);
                             context.Response.AddApplicationError(error.Error.Message);
                             await context.Response.WriteAsync(error.Error.Message);
                         }
@@ -97,10 +117,13 @@ namespace DatingApp.API
             app.UseCors(x => x.WithOrigins("http://localhost:4200").
                 AllowAnyMethod().AllowAnyHeader().AllowCredentials());
             app.UseAuthentication();
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapFallbackToController("Index", "Fallback");
                 endpoints.MapHub<ChatHub>("/chatHub");
             });
         }

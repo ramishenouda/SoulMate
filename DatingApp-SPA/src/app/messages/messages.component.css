@@ -1,14 +1,19 @@
-table {
-    margin-top: 15px
-}
-
-td {
-    vertical-align: middle;
+.chat-background {
+    height: 638px;
+    width: 100%;
 }
 
 .img-circle {
-    max-height: 40px;
+    max-height: 70px;
+    border-radius: 100%;
 }
+
 .message-area:hover {
     background-color: rgb(185, 183, 183);
+}
+
+.souls {
+    overflow-y: auto;
+    height: 680px;
+    min-height: 421px;
 }

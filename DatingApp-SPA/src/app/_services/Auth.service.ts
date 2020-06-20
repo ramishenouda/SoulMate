@@ -33,11 +33,13 @@ export class AuthService {
           if (user) {
             localStorage.setItem('token', user.token);
             localStorage.setItem('user', JSON.stringify(user.user));
-            // sets the decodedToken to be equal to token
+            // sets the decodedToken to be equal to token.
             this.setToken(user.token);
-            // sets the current user to be equal to user
+            // sets the current user to be equal to user.
             this.setUser(user.user);
+            // Changing the member photo.
             this.changeMemberPhoto(this.currentUser.photoUrl);
+            // Setuping up the hub for messages.
             this.hub.setupHub();
           }
         })

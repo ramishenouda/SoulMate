@@ -38,7 +38,11 @@ export class MessageService {
       );
   }
 
-  getUnreadMessages(id: number, recipientId: number) {
+  getLastMessage(id: number, recipientId: number) {
+    return this.http.get<any>(this.baseUrl + 'users/' + id + '/messages/lastMessage/' + recipientId);
+  }
+
+  getUnreadMessages(id: number, recipientId: number = -1) {
     return this.http.get<Message[]>(this.baseUrl + 'users/' + id + '/messages/unread/' + recipientId);
   }
 
@@ -64,6 +68,7 @@ export class MessageService {
       );
   }
 
+
   sendMessage(id: number, message: Message) {
     return this.http.post<Message>(this.baseUrl + 'users/' + id + '/messages', message);
   }
@@ -77,7 +82,7 @@ export class MessageService {
   }
 
   markAsReceived(userId: number, messageId: number) {
-    return this.http.post(this.baseUrl + 'users/' + userId + '/messages/' + messageId + '/receive', {});
+    return this.http.post(this.baseUrl + 'users/' + userId + '/messages/' + messageId + '/receive', {}).subscribe();
   }
 
 }

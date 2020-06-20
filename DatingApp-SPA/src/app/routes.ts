@@ -26,7 +26,7 @@ export const appRoutes: Routes = [
         resolve: { user: MemberDetailResolver }},
       { path: 'member/profile', component: MemberProfileComponent,
         resolve: { user: MemberProfileResolver }, canDeactivate: [PreventUnsavedChanges]},
-      { path: 'messages', component: MessagesComponent, resolve: {messages: MessagesResolver}},
+      { path: 'messages', component: MessagesComponent, resolve: {souls: MessagesResolver}},
       { path: 'lists', component: ListsComponent, resolve: {users: ListResolver} }
     ]
   },

@@ -3,7 +3,7 @@
     <div class="col-sm-4">
       <h1> Your Profile</h1>
     </div>
-    <div *ngIf="editForm.dirty" class="col-sm-8">
+    <div *ngIf="editForm.dirty && !noChanges()" class="col-sm-8">
       <div class="alert alert-info">
         <strong>Information:</strong> You have made changes. Any unsaved changes will be lost!
       </div>
@@ -28,7 +28,7 @@
           </div>
         </div>
         <div class="card-footer">
-            <button [disabled]="!editForm.dirty" form="editForm" class="btn btn-success btn-block">Save Changes</button>
+            <button [disabled]="!editForm.dirty || noChanges()" form="editForm" class="btn btn-success btn-block">Save Changes</button>
         </div>
       </div>
     </div>

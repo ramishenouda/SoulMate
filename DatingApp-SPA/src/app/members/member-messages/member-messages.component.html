@@ -3,7 +3,10 @@
     <i class="fa fa-spinner fa-spin fa-4x"></i>
   </div>
 
-  <div class="card-body" id="messagesList">
+  <div class="card-body"
+    [ngClass]="{'messages-list-profile': onMessages == false || screenWidth < 768, 'messages-list-messages': onMessages == true && screenWidth > 767}"
+    id="messagesList">
+    <div *ngIf="recipient">
     <div *ngIf="messages?.length == 0 && messageToSend.senderId != messageToSend.recipientId">
       <p>
         No messages yet... maybe start by saying Hi :D
@@ -18,7 +21,7 @@
 
     <ul class="chat">
       <li class="mb-1" *ngFor="let message of messages">
-        <!-- to them -->
+        <!-- from them -->
         <div *ngIf="message.senderId == recipient.id">
           <span class="chat-img float-left">
             <img src="{{ message.senderPhotoUrl }}" alt="{{ message.senderKnownAs }}" class="rounded-circle mr-1">
@@ -32,20 +35,26 @@
                     {{ message.sentDate | timeAgoMessages }}
                   </span>
                 </span>
+                <small class="float-right">
+                  <span *ngIf="screenWidth > 767">
+                    <button class="btn btn-info btn-xs mr-1" (click)="quoteMessage(message.id)">Quote</button>
+                    <button class="btn btn-danger btn-xs" (click)="deleteMessage(message.id)">Delete</button>
+                  </span>
+                </small>
               </small>
             </div>
             <p *ngIf="message.sentDate != null && message.sentDate != defaultDate" class="text-info">
                 {{ message.content }} 
             </p>
             <p *ngIf="message.sentDate == defaultDate" class="text-muted">
-                {{ message.content }} 
+                {{ message.content }}
             </p>
             <p *ngIf="message.sentDate == null" class="text-danger">
                 {{ message.content }} 
             </p>
           </div>
         </div>
-        <!-- to me -->
+        <!-- to them -->
         <div *ngIf="message.senderId != recipient.id">
           <span class="chat-img float-left">
             <img src="{{ message.senderPhotoUrl }}" alt="{{ message.senderKnownAs }}" class="rounded-circle mr-1">
@@ -60,15 +69,19 @@
                   </span>
                 </span>
               </small>
-              <small class="text-muted float-right">
+              <small class="float-right">
                 <span *ngIf="!message.isRead && !message.isReceived && message.sentDate != defaultDate" class="text-muted">
-                  <i style="font-size: 16px;" class="fa fa-angle-up"></i>
+                  <i style="font-size: 16px;" class="fa fa-angle-up" title="delivered"></i>
                 </span>
                 <span *ngIf="message.isRead" class="text-success">
-                  <i style="font-size: 16px;" class="fa fa-angle-double-up"></i> {{ message.readDate | timeAgoMessages }} 
+                  <i style="font-size: 16px;" class="fa fa-angle-double-up" title="Read"></i> {{ message.readDate | timeAgoMessages }} 
                 </span>
                 <span *ngIf="!message.isRead && message.isReceived" class="text-muted">
-                  <i style="font-size: 16px;" class="fa fa-angle-double-up"></i> 
+                  <i style="font-size: 16px;" class="fa fa-angle-double-up" title="Received"></i> 
+                </span>
+                <span class="ml-3" *ngIf="message.sentDate != defaultDate && screenWidth > 767">
+                  <button class="btn btn-info btn-xs mr-1" (click)="quoteMessage(message.id)">Quote</button>
+                  <button class="btn btn-danger btn-xs" (click)="deleteMessage(message.id)">Delete</button>
                 </span>
               </small>
             </div>
@@ -85,16 +98,19 @@
         </div>
       </li>
     </ul>
+    </div>
   </div>
 
-  <div class="card-footer">
+  <div 
+    [ngClass]="{'card-footer-profile': onMessages == false || screenWidth < 768, 'card-footer-messages': onMessages == true && screenWidth > 767}">
     <form #messageForm="ngForm" (ngSubmit)="messageForm.valid && sendMessage(messages.length)">
       <div class="input-group">
-        <input type="text" class="form-control input-sm" placeholder="Send a message"
-          autocomplete="off"
-          [(ngModel)]="newMessage.content" name="content" required>
+        <textarea [disabled]="!isSoul" placeholder="Send a message"
+          class="form-control input-sm"
+          autocomplete="off" id="messageInput"
+          [(ngModel)]="newMessage.content" name="content" required></textarea>
         <div class="input-group-append">
-          <button class="btn btn-primary" [disabled]="!messageForm.valid">Send</button>
+          <button class="btn btn-primary" [disabled]="!messageForm.valid || !isSoul">Send</button>
         </div>
       </div>
     </form>

@@ -14,7 +14,7 @@ export class ListResolver implements Resolve<User[]> {
 
     constructor(private userService: UserService, private router: Router, private alertify: AlertifyService) { }
     resolve(route: ActivatedRouteSnapshot): Observable<User[]> {
-        return this.userService.getUsers(this.pageNumber, this.pageSize, null, this.likesParam).pipe(
+        return this.userService.getUsers(this.pageNumber, this.pageSize, 'mix', this.likesParam).pipe(
             catchError(error => {
                 this.alertify.error('Problem retrieving data');
                 this.router.navigate(['/home']);

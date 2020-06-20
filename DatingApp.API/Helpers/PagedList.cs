@@ -29,5 +29,13 @@ namespace DatingApp.API.Helpers
 
             return new PagedList<T>(items, totalCount, pageNumber, pageSize);
         }
+
+        public static PagedList<T> CreateFromList(List<T> source, int pageNumber, int pageSize)
+        {
+            int totalCount = source.Count;
+            var items = source.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+
+            return new PagedList<T>(items.ToList(), totalCount, pageNumber, pageSize);
+        }
     }
 }

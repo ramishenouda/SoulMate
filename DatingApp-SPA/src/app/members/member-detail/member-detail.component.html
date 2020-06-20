@@ -55,7 +55,7 @@
             <ngx-gallery [options]="galleryOptions" [images]="galleryImages" class="ngx-gallery"></ngx-gallery>
           </tab>
           <tab heading="Messages" (selectTab)="triggerMessageTap(true)">
-            <app-member-messages [activatedTap]="messageTap" [recipient]="user"></app-member-messages>
+            <app-member-messages [activatedTap]="messageTap" [onMessages]="false" [recipient]="user" [isSoul]="isSoul"></app-member-messages>
           </tab>
         </tabset>
       </div>

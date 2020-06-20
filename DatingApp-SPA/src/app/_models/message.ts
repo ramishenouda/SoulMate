@@ -12,8 +12,4 @@ export class Message {
     isReceived: boolean;
     receivedDate: Date;
     sentDate: Date;
-
-    Message() {
-        console.log('here');
-    }
 }

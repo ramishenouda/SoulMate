@@ -14,6 +14,7 @@ import { AuthService } from 'src/app/_services/Auth.service';
 export class MemberProfileComponent implements OnInit {
   @ViewChild('editForm') editForm: NgForm;
   user: User;
+  tempUser: User;
   photoUrl: string;
 
   @HostListener('window:beforeunload', ['$event'])
@@ -28,6 +29,7 @@ export class MemberProfileComponent implements OnInit {
   ngOnInit() {
     this.route.data.subscribe(data => {
       this.user = data.user;
+      this.tempUser = Object.assign({}, this.user);
     });
 
     this.authService.currentPhotoUrl.subscribe(photoUrl => this.photoUrl = photoUrl);
@@ -37,12 +39,20 @@ export class MemberProfileComponent implements OnInit {
     this.userSerivce.updateUser(this.authService.decodedToken.nameid, this.user).subscribe(next => {
       this.alertify.success('Profile updated successfully');
       this.editForm.reset(this.user);
+      this.tempUser = Object.assign({}, this.user);
     }, error => {
-
       this.alertify.error(error);
     });
   }
 
+  noChanges() {
+    if (this.tempUser.introduction !== this.user.introduction || this.tempUser.interests !== this.user.interests
+        || this.tempUser.city !== this.user.city || this.tempUser.country !== this.user.country) {
+          return false;
+    }
+
+    return true;
+  }
   updateMainPhoto(photoUrl) {
     this.user.photoUrl = photoUrl;
   }

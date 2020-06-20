@@ -1,61 +1,102 @@
-<div class="container mt-5">
+<div class="container-fluid" *ngIf="screenWidth >= 768">
   <div class="row">
-    <div class="btn-group">
-      <button class="btn btn-primary" [(ngModel)]="messageContainer" btnRadio="Unread" (click)="loadMessages()">
-        <i class="fa fa-envelope"></i> Unread
-      </button>
-      <button class="btn btn-primary" [(ngModel)]="messageContainer" btnRadio="Inbox" (click)="loadMessages()">
-        <i class="fa fa-envelope-open"></i> Inbox
-      </button>
-      <button class="btn btn-primary" [(ngModel)]="messageContainer" btnRadio="Outbox" (click)="loadMessages()">
-        <i class="fa fa-paper-plane"></i> Outbox
-      </button>
+    <div class="col-sm-3 souls">
+      <div class="card">
+        <div class="card-body">
+          <div class="list-group" *ngFor="let soul of souls; index as i">
+            <div class="soul" *ngIf="soul !== undefined">
+              <a (click)="loadMember(i)" class="list-group-item list-group-item-action">
+                <div class="row">
+                  <div class="col-sm-2 mr-4">
+                    <img src="{{ soul.photoUrl }}" alt="{{ soul.knownAs }}" class="img-circle">
+                  </div>
+                  <div class="col-sm-8">
+                    <button class="btn btn-link">
+                      <strong [routerLink]="['/members/', soul.id]"> {{ soul.knownAs }} </strong>
+                    </button>
+                    <p>
+                      {{ soul.content }}
+                    </p>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-9">
+      <div class="card">
+        <div *ngIf="soul" class="card-body">
+          <app-member-messages class="chat" [activatedTap]="true" 
+            [recipient]="soul" 
+            [onMessages]="true" [isSoul]="true">
+          </app-member-messages>
+        </div>
+        <div *ngIf="soul === undefined && soulState != 0" class="card-body">
+          <app-member-messages class="chat" [activatedTap]="true" 
+            [recipient]="soul" [onMessages]="true" [isSoul]="true" 
+            [canGetMessages]=0>
+          </app-member-messages>
+        </div>
+        <div *ngIf="soulState == 0" class="card-body">
+          <img src="../../assets/twin-souls.png" alt="SoulMate" class="chat-background">
+        </div>
+      </div>
     </div>
   </div>
-
-  <div class="row" *ngIf="messages.length == 0">
-    <h3>No messages</h3>
-  </div>
-
-  <div class="row" *ngIf="messages.length > 0">
-    <table class="table table-hover" style="cursor: pointer">
-      <tr>
-        <th style="width: 40%">Message</th>
-        <th style="width: 20%">From / To</th>
-        <th style="width: 20%">Sent / Received</th>
-        <th style="width: 20%"></th>
-      </tr>
-      <tr class="message-area" *ngFor="let message of messages" [routerLink]="['/members', 
-        messageContainer == 'Outbox' ? message.recipientId : message.senderId]"
-        [queryParams]="{tab: 2}">
-        <td>{{message.content}}</td>
-        <td>
-          <div *ngIf="messageContainer != 'Outbox'">
-                <img src={{message?.senderPhotoUrl}} class="img-circle rounded-circle mr-1">
-                <strong>{{message.senderKnownAs}}</strong>
-          </div>
-          <div *ngIf="messageContainer == 'Outbox'">
-                <img src={{message?.recipientPhotoUrl}} class="img-circle rounded-circle mr-1">
-                <strong>{{message.recipientKnownAs}}</strong>
-          </div>
-        </td>
-        <td>{{ message.sentDate | timeAgoMessages }}</td>
-        <td>
-          <button class="btn btn-danger" (click)="$event.stopPropagation()" (click)="deleteMessage(message.id)">Delete</button>
-        </td>
-      </tr>
-    </table>
-
-  </div>
-
 </div>
 
-<div class="d-flex justify-content-center">
-    <pagination [boundaryLinks]="true" 
-                [totalItems]="pagination.totalItems"
-                [itemsPerPage]="pagination.itemsPerPage"
-                [(ngModel)]="pagination.currentPage"
-                (pageChanged)="pageChanged($event)"
-              previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
-  </pagination>
+
+<div class="container-fluid" *ngIf="screenWidth < 768" class="dropdown" dropdown [autoClose]="false">
+  <div class="row">
+    <div class="col souls">
+      <div class="card">
+        <div class="card-body">
+          <div class="list-group" *ngFor="let soul of souls; index as i">
+            <div class="soul" *ngIf="soul !== undefined" >
+              <span class="dropdown-toggle" dropdownToggle>
+                <a (click)="loadMember(i)"  class="list-group-item list-group-item-action">
+                  <div class="row">
+                    <div class="col-sm-2 mr-4">
+                      <img src="{{ soul.photoUrl }}" alt="{{ soul.knownAs }}" class="img-circle">
+                    </div>
+                    <div class="col-sm-8">
+                      <button class="btn btn-link">
+                        <strong [routerLink]="['/members/', soul.id]"> {{ soul.knownAs }} </strong>
+                      </button>
+                      <p>
+                        {{ soul.content }}
+                      </p>
+                    </div>
+                  </div>
+                </a>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+  <div class="row">
+      <div class="dropdown-menu col" *dropdownMenu>
+        <div class="dropdown-item card">
+          <div *ngIf="soul" class="card-body">
+            <app-member-messages class="chat" [activatedTap]="true" 
+              [recipient]="soul" 
+              [onMessages]="true" [isSoul]="true">
+            </app-member-messages>
+          </div>
+          <div *ngIf="soul === undefined && soulState != 0" class="card-body">
+            <app-member-messages class="chat" [activatedTap]="true" [recipient]="soul" 
+              [onMessages]="true" [isSoul]="true" 
+              [canGetMessages]=0>
+            </app-member-messages>
+          </div>
+          <div *ngIf="soulState == 0" class="card-body">
+            <img src="../../assets/twin-souls.jpg" alt="SoulMate" class="chat-background">
+          </div>
+        </div>
+      </div>
+  </div>
+</div>
