@@ -5,7 +5,7 @@
 </h1>
 
 <p align="center">
-  <strong>Meet strangers, and find your soulmate</strong><br>
+  <strong>Meet strangers and find your soulmate</strong><br>
 </p>
 
 <p align="center">
@@ -20,15 +20,13 @@
   </a>
 </p>
 
-SoulMate is a dating website where people can meet, chat, and like eachother.
+SoulMate is a dating website where people can meet, chat, and like each other.
 
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
 ### Prerequisites
-
-What things you need to install the software:
 
 - npm
 
@@ -61,7 +59,7 @@ npm install
 4. Open the terminal and change your directory to DatingApp/DatingApp.API and use the command dotnet run to, to run the backend server. 
 
 ```
-dotnet run or dotnet watch run
+dotnet run
 ```
 5. Open the terminal and change your directory to DatingApp/DatingApp-SPA and use the command ng serve, to run the nodejs (for angular) server.   
 
