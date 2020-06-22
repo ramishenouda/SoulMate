@@ -268,7 +268,6 @@ namespace DatingApp.API.Data
 
         public async Task<IEnumerable<Message>> GetUnreadMessages(int userId, int recipientId)
         {
-
             var lastUnreadMessage = await _context.Messages.OrderByDescending(m => m.SentDate)
             .LastOrDefaultAsync
             (
@@ -300,7 +299,8 @@ namespace DatingApp.API.Data
                 if(lastUnreadMessageId != 0)
                     return _messages;
                 else
-                    return await PagedList<Message>.CreateAsync(_messages, 0, 10);
+                    return await PagedList<Message>.CreateAsync(_messages, 1, 10);
+
             }
 
             else 

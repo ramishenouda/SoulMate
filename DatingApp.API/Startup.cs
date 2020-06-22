@@ -1,13 +1,9 @@
-using System;
-using System.Net;
 using AutoMapper;
 using DatingApp.API.Data;
 using DatingApp.API.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,30 +24,24 @@ namespace DatingApp.API
 
         public IConfiguration Configuration { get; }
 
-        // public void ConfigureDevelopmentServices(IServiceCollection services)
-        // {
-        //     services.AddDbContext<DataContext>(x => x.UseSqlite
-        //     (Configuration.GetConnectionString("DefaultConnection")));
+        public void ConfigureDevelopmentServices(IServiceCollection services)
+        {
+            services.AddDbContext<DataContext>(x => 
+                x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
 
-        //     Console.WriteLine(Configuration.GetConnectionString("DefaultConnection"));
-            
-        //     ConfigureServices(services);
-        // }
+            ConfigureServices(services);
+        }
 
-        // public void ConfigureProductionServices(IServiceCollection services)
-        // {
-        //     services.AddDbContext<DataContext>(x => x.UseMySql
-        //     (Configuration.GetConnectionString("DefaultConnection")));
+        public void ConfigureProductionServices(IServiceCollection services)
+        {
+            services.AddDbContext<DataContext>(x => 
+                x.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-        //     Console.WriteLine(Configuration.GetConnectionString("DefaultConnection"));
-
-        //     ConfigureServices(services);
-        // }
+            ConfigureServices(services);
+        }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DataContext>(x => x.UseSqlite
-            (Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddHttpContextAccessor();
 
@@ -81,10 +71,10 @@ namespace DatingApp.API
                     {
                         OnMessageReceived = context => 
                         {
-                            var signalRTokenHeader = context.Request.Query["Authorization"];
-                            if (!string.IsNullOrEmpty(signalRTokenHeader)) {
+                            var signalRTokenHeader = context.Request.Query["Authorization"];                            
+                            if (!string.IsNullOrEmpty(signalRTokenHeader)) 
                                 context.Token = signalRTokenHeader.FirstOrDefault();
-                            }
+                            
                             return Task.CompletedTask;
                         }
                     };
@@ -97,22 +87,24 @@ namespace DatingApp.API
             {
                 app.UseDeveloperExceptionPage();
             }
-            else
-            {
-                app.UseExceptionHandler(builder => {
-                    builder.Run(async context => {
-                        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                        var error = context.Features.Get<IExceptionHandlerFeature>();
-                        if(error != null)
-                        {
-                            context.Response.AddApplicationError(error.Error.Message);
-                            await context.Response.WriteAsync(error.Error.Message);
-                        }
-                    });
-                });
-                //app.UseHttpsRedirection();    
-            }
+            // else
+            // {
+            //     app.UseExceptionHandler(builder => {
+            //         builder.Run(async context => {
+            //             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            //             var error = context.Features.Get<IExceptionHandlerFeature>();
+            //             if(error != null)
+            //             {
+            //                 context.Response.AddApplicationError(error.Error.Message);
+            //                 await context.Response.WriteAsync(error.Error.Message);
+            //             }
+            //         });
+            //     });
 
+            // }        
+        
+            app.UseDeveloperExceptionPage();
+            app.UseHttpsRedirection();    
             app.UseRouting();
             app.UseCors(x => x.WithOrigins("http://localhost:4200").
                 AllowAnyMethod().AllowAnyHeader().AllowCredentials());
