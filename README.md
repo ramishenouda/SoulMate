@@ -12,9 +12,7 @@
   <a href="https://github.com/ramishenouda/SoulMate/blob/master/LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="SoulMate, Released under MIT License." />
   </a>
-  <a href="https://www.npmjs.org/package/react-native">
-    <img src="https://img.shields.io/badge/Made%20with-ASP.net & Angular-1f425f.svg" alt="Made with, ASP.NET, and Angular" />
-  </a>
+  <img src="https://img.shields.io/badge/Made%20with-ASP.net & Angular-1f425f.svg" alt="Made with, ASP.NET, and Angular" />
   <a href="http://soulmate.azurewebsites.net/">
     <img src="https://img.shields.io/badge/Website-SoulMate-brightgreen.svg" alt="Soul Mate website link" />
   </a>
