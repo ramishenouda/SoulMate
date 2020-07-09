@@ -6,6 +6,7 @@ import { environment } from 'src/environments/environment';
 import { User } from '../_models/user';
 import { BehaviorSubject } from 'rxjs';
 import { HubService } from './hub.service';
+import { MessageService } from './message.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,7 @@ export class AuthService {
   photoUrl = new BehaviorSubject<string>(environment.assetsPath + 'user.png');
   currentPhotoUrl = this.photoUrl.asObservable();
 
-  constructor(private http: HttpClient, private hub: HubService) { }
+  constructor(private http: HttpClient, private hub: HubService, private messageService: MessageService) { }
 
   changeMemberPhoto(photoUrl: string) {
     this.photoUrl.next(photoUrl);
@@ -41,6 +42,7 @@ export class AuthService {
             this.changeMemberPhoto(this.currentUser.photoUrl);
             // Setuping up the hub for messages.
             this.hub.setupHub();
+            this.recieveUnreadMessages();
           }
         })
       );
@@ -65,5 +67,18 @@ export class AuthService {
   }
   setUser(user: User) {
       this.currentUser = user;
+  }
+
+  recieveUnreadMessages() {
+    this.messageService.getUnreadMessages(this.decodedToken.nameid).subscribe(
+      messages => {
+        messages.forEach(message => {
+          if (message.isReceived === false && message.recipientId === this.currentUser.id) {
+            this.messageService.markAsReceived(this.currentUser.id, message.id);
+            this.hub.hubConnection.invoke('markMessageAsReceived', message.senderId, message.id);
+          }
+        });
+      }
+    );
   }
 }

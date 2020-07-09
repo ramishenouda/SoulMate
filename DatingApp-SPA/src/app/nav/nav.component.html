@@ -1,12 +1,9 @@
 <!--Menu, for large screens-->
 <nav *ngIf="screenSize > 1000" class="datingMenu navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container">
-        <a *ngIf='!loggedIn()' class="navbar-brand" [routerLink]="['/']"> HW </a>
+        <a class="navbar-brand" [routerLink]="['/']"> HW </a>
 
         <ul *ngIf='loggedIn()' class="navbar-nav mr-auto">
-            <li class="nav-item" routerLinkActive="active">
-                <a class="navbar-brand" [routerLink]="['/members']"> HW </a>
-            </li>
             <li class="nav-item" routerLinkActive="active">
                 <a class="nav-link" [routerLink]="['/members']"> Matches </a>
             </li>

@@ -173,6 +173,9 @@ namespace DatingApp.API.Hubs
             // Add to the global dictionary of connected users
             MyUsers.TryAdd(userId, existingUserConnectionIds);
 
+            var offset = TimeZoneInfo.Local.GetUtcOffset(DateTime.UtcNow);
+
+            Clients.Client(Context.ConnectionId).SendAsync("serverTimezoneOffset", offset);
             return base.OnConnectedAsync();
         }
 

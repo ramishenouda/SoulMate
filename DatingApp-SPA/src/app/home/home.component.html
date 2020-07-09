@@ -1,17 +1,42 @@
-<div *ngIf="!loggedIn()" class="container mt-5">
-  <div *ngIf="!registerMode" style="text-align: center">
+<div *ngIf="!loggedIn() && !learnMoreMode" class="container mt-5">
+  <div *ngIf="!registerMode && !learnMoreMode" style="text-align: center">
     <h1>Find your match</h1>
-    <p class="lead">Come on in to view your matches... All you need to do is sign up!</p>
+    <p class="lead">SoulMate is a dating website where you can meet, chat and like other people.</p>
     <div class="text-center">
       <button class="btn btn-primary btn-lg mr-2" (click)="registerToggle()">Register</button>
+      <button class="btn btn-primary btn-lg mr-2" (click)="learnMoreToggle()">Learn More</button>
     </div>
   </div>
 
   <div *ngIf="registerMode" class="container">
     <div class="row justify-content-center">
       <div class="col-lg-4">
-        <app-register (cancelRegister)="cancelRegisterMode($event)"></app-register>
+        <app-register (cancelRegister)="registerToggle()"></app-register>
       </div>
     </div>
   </div>
+</div>
+
+<div *ngIf="loggedIn() || learnMoreMode" class="container mt-5">
+  
+  <div>
+    <h1>For recruiters</h1>
+    <p>
+      <span style="font-size: large;">You can use the following information to test the website.</span><br>
+      <strong>Username:</strong> freda <br>
+      <strong>Password:</strong> password <br>    
+      <strong>Username:</strong> boyer <br>
+      <strong>Password:</strong> password <br> 
+    </p>
+  </div>
+
+  <div>
+    <h1>SoulMate's chat system</h1>
+    <p>
+      When one of the members you have liked, likes you back you 
+      both become one soul, and you will be able to message each other.<br>
+    </p>
+  </div>
+
+  <button *ngIf="!loggedIn()" class="btn btn-primary btn-lg mr-2" (click)="learnMoreToggle()">Back to home</button>
 </div>

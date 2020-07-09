@@ -28,6 +28,7 @@ export class MemberDetailComponent implements OnInit {
   ngOnInit() {
     this.route.data.subscribe(data => {
       this.user = data.user;
+      this.user.lastActive = Date.parse(this.user.lastActive) - +localStorage.getItem('timezoneOffset');
       if (this.authService.currentUser.id !== this.user.id) {
         this.userService.isLiked(this.authService.currentUser.id, this.user.id).subscribe(
           value => {

@@ -10,17 +10,18 @@ import { AuthService } from '../_services/Auth.service';
 export class HomeComponent implements OnInit
 {
   registerMode = false;
+  learnMoreMode = false;
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
   ngOnInit() { }
 
   registerToggle() {
-    this.registerMode = true;
+    this.registerMode = !this.registerMode;
   }
 
-  cancelRegisterMode(event: boolean) {
-    this.registerMode = event;
+  learnMoreToggle() {
+    this.learnMoreMode = !this.learnMoreMode;
   }
 
   loggedIn() {

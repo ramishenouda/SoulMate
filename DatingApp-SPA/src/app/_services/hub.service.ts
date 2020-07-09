@@ -24,6 +24,7 @@ export class HubService {
         this.alertify.error('Error while connecting to the hub, try refreshing the page');
       });
 
+      this.getServertimezoneOffset();
       this.onReceivedMessage();
     }
   }
@@ -45,6 +46,12 @@ export class HubService {
         }
         this.alertify.message('<span style="font-weight:bold">' + senderKnownAs + ': </span>' + messageForNotfication);
       }
+    });
+  }
+
+  getServertimezoneOffset() {
+    this.hubConnection.on('serverTimezoneOffset', (serverTimezoneOffset) => {
+      localStorage.setItem('timezoneOffset', (new Date().getTimezoneOffset() * 60 * 1000).toString());
     });
   }
 }

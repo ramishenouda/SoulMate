@@ -8,8 +8,8 @@ export class Message {
     recipientPhotoUrl: string;
     content: string;
     isRead: boolean;
-    readDate: Date;
+    readDate: any;
     isReceived: boolean;
-    receivedDate: Date;
-    sentDate: Date;
+    receivedDate: any;
+    sentDate: any;
 }

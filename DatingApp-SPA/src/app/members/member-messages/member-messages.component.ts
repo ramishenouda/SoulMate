@@ -128,6 +128,17 @@ export class MemberMessagesComponent implements OnInit, AfterViewInit {
           this.hub.hubConnection.invoke('MarkMessageAsRead', message.senderId, message.id);
           this.messageService.markAsRead(this.user.id, message.id);
         }
+
+        message.sentDate =  Date.parse(message.sentDate) - +localStorage.getItem('timezoneOffset');
+
+        if (message.isRead) {
+          message.readDate =  Date.parse(message.readDate) - +localStorage.getItem('timezoneOffset');
+        }
+
+        if (message.isReceived) {
+          message.receivedDate =  Date.parse(message.receivedDate) - +localStorage.getItem('timezoneOffset');
+        }
+
       });
     }))
     .subscribe((result) => {
@@ -203,7 +214,7 @@ export class MemberMessagesComponent implements OnInit, AfterViewInit {
     this.hub.hubConnection.invoke('SendMessage', this.user.id, this.recipient.id, this.newMessage.content,
                                   this.hub.hubConnection.connectionId)
     .then((data: any) => {
-        let date = '';
+        let dateString = '';
         let id = '';
         // tslint:disable-next-line: prefer-for-of
         for (let i = 0; i < data.length; i++) {
@@ -213,14 +224,16 @@ export class MemberMessagesComponent implements OnInit, AfterViewInit {
             }
             break;
           }
-          date += data[i];
+          dateString += data[i];
         }
-        this.messages[this.messages.length - length].sentDate = new Date(date);
+        this.messages[this.messages.length - length].sentDate = new Date(new Date(dateString).valueOf() -
+          +localStorage.getItem('timezoneOffset'));
         this.messages[this.messages.length - length].id = +id;
       }).catch(error => {
         this.alertify.error('Error while sending the message : ' + error);
         this.messages[this.messages.length - length].sentDate = null;
       });
+
     this.messageToSend.content = this.newMessage.content;
     this.messages.unshift(Object.assign({}, this.messageToSend));
     this.newMessage.content = '';
@@ -245,7 +258,7 @@ export class MemberMessagesComponent implements OnInit, AfterViewInit {
       for (const message of this.messages) {
         if (message.id === messageId) {
           message.isRead = true;
-          message.readDate = readDate;
+          message.readDate = Date.parse(readDate) - +localStorage.getItem('timezoneOffset');
         }
       }
     });
@@ -256,7 +269,7 @@ export class MemberMessagesComponent implements OnInit, AfterViewInit {
       for (const message of this.messages) {
         if (message.id === messageId) {
           message.isReceived = true;
-          message.readDate = receiveDate;
+          message.readDate = Date.parse(receiveDate) - +localStorage.getItem('timezoneOffset');
         }
       }
     });
@@ -265,7 +278,7 @@ export class MemberMessagesComponent implements OnInit, AfterViewInit {
   messageReceivedHub() {
     this.hub.hubConnection.on('messageReceived', (recipientId, messageId, receiveDate, content, received, hubConnectionId) => {
       this.messages[0].isReceived = received;
-      this.messages[0].receivedDate = receiveDate;
+      this.messages[0].receivedDate = Date.parse(receiveDate) - +localStorage.getItem('timezoneOffset');
       if (this.hub.hubConnection.connectionId !== hubConnectionId) {
         this.addSentMessage(messageId, content, receiveDate, received);
       }
@@ -274,7 +287,7 @@ export class MemberMessagesComponent implements OnInit, AfterViewInit {
 
   addSentMessage(messageId, messageContent, sentDate, isReceived) {
     this.messageToSend.content = messageContent;
-    this.messageToSend.sentDate = sentDate;
+    this.messageToSend.sentDate = Date.parse(sentDate) - +localStorage.getItem('timezoneOffset');
     this.messageToSend.id = messageId;
     this.messageToSend.isReceived = isReceived;
     this.messages.unshift(Object.assign({}, this.messageToSend));
@@ -282,7 +295,7 @@ export class MemberMessagesComponent implements OnInit, AfterViewInit {
 
   addReceivedMessage(messageId, messageContent, sentDate) {
     this.messageToRecieve.content = messageContent;
-    this.messageToRecieve.sentDate = sentDate;
+    this.messageToRecieve.sentDate = Date.parse(sentDate) - +localStorage.getItem('timezoneOffset');
     this.messageToRecieve.id = messageId;
     this.messages.unshift(Object.assign({}, this.messageToRecieve));
   }

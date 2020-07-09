@@ -29,6 +29,7 @@ export class MemberProfileComponent implements OnInit {
   ngOnInit() {
     this.route.data.subscribe(data => {
       this.user = data.user;
+      this.user.lastActive =  Date.parse(this.user.lastActive) - +localStorage.getItem('timezoneOffset');
       this.tempUser = Object.assign({}, this.user);
     });
 
