@@ -1,5 +1,5 @@
 <h1 align="center">
-  <a href="http://ramishenouda-001-site1.itempurl.com/">
+  <a href="https://mysoul.herokuapp.com/">
     SoulMate
   </a>
 </h1>
@@ -13,7 +13,7 @@
     <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="SoulMate, Released under MIT License." />
   </a>
   <img src="https://img.shields.io/badge/Made%20with-ASP.net & Angular-1f425f.svg" alt="Made with, ASP.NET, and Angular" />
-  <a href="http://soulmate.azurewebsites.net/">
+  <a href="https://mysoul.herokuapp.com/">
     <img src="https://img.shields.io/badge/Website-SoulMate-brightgreen.svg" alt="Soul Mate website link" />
   </a>
 </p>
