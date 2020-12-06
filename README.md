@@ -1,6 +1,6 @@
 <h1 align="center">
   <a href="https://mysoul.herokuapp.com/">
-    SoulMate
+    MySoul
   </a>
 </h1>
 
@@ -9,16 +9,16 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/ramishenouda/SoulMate/blob/master/LICENSE">
-    <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="SoulMate, Released under MIT License." />
+  <a href="https://github.com/ramishenouda/MySoul/blob/master/LICENSE">
+    <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MySoul, Released under MIT License." />
   </a>
   <img src="https://img.shields.io/badge/Made%20with-ASP.net & Angular-1f425f.svg" alt="Made with, ASP.NET, and Angular" />
   <a href="https://mysoul.herokuapp.com/">
-    <img src="https://img.shields.io/badge/Website-SoulMate-brightgreen.svg" alt="Soul Mate website link" />
+    <img src="https://img.shields.io/badge/Website-MySoul-brightgreen.svg" alt="MySoul's link" />
   </a>
 </p>
 
-SoulMate is a dating website where people can meet, chat, and like each other.
+MySoul is a dating website where people can meet, chat, and like each other.
 
 ## Getting Started
 
@@ -43,7 +43,7 @@ https://dotnet.microsoft.com/download
 1. Clone the repo.
 
 ```
-git clone https://github.com/ramishenouda/SoulMate.git
+git clone https://github.com/ramishenouda/MySoul.git
 ```
 
 2. Run npm install inside DatingApp/DatingApp-SPA to install npm packages for Angular.
