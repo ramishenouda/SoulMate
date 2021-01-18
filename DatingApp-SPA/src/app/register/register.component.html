@@ -1,4 +1,4 @@
-<form [formGroup]="registerForm" (ngSubmit)="register()">
+<form [formGroup]="registerForm" class="text-light" (ngSubmit)="register()">
   <h2 class="text-center text-primary">Sign Up</h2>
   <hr>
 
@@ -90,6 +90,6 @@
 
   <div class="form-group text-center">
     <button class="btn btn-success" type="submit" [disabled]="registerForm.invalid">Register</button>
-    <button class="btn btn-default" type="button" (click)="cancel()">Cancel</button>
+    <button class="btn btn-default text-light" type="button" (click)="cancel()">Cancel</button>
   </div>
 </form>

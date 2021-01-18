@@ -12,6 +12,7 @@ import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { NgxGalleryModule } from '@kolkov/ngx-gallery';
 import { FileUploadModule } from 'ng2-file-upload';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { NgxSpinnerModule } from "ngx-spinner";
 
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
@@ -77,6 +78,7 @@ export function tokenGetter() {
       TabsModule.forRoot(),
       RouterModule.forRoot(appRoutes),
       FileUploadModule,
+      NgxSpinnerModule,
       JwtModule.forRoot({
          config: {
             tokenGetter,

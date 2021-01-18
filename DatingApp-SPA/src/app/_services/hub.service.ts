@@ -17,7 +17,7 @@ export class HubService {
    if (localStorage.getItem('user') !== null) {
       const date = new Date();
       this.hubConnection = new signalR.HubConnectionBuilder()
-       .withUrl(`http://localhost:5000/chatHub?Authorization=${localStorage.getItem('token')}`)
+       .withUrl(`./chatHub?Authorization=${localStorage.getItem('token')}`)
        .build();
 
       this.hubConnection.start().catch(error => {

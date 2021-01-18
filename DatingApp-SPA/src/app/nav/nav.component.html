@@ -1,7 +1,7 @@
 <!--Menu, for large screens-->
 <nav *ngIf="screenSize > 1000" class="datingMenu navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container">
-        <a class="navbar-brand" [routerLink]="['/']"> HW </a>
+        <a class="navbar-brand" [routerLink]="['/']"> MySoul </a>
 
         <ul *ngIf='loggedIn()' class="navbar-nav mr-auto">
             <li class="nav-item" routerLinkActive="active">
@@ -34,12 +34,18 @@
             </div>
         </div>
 
-        <form *ngIf='!loggedIn()' #loginForm="ngForm" class="form-inline my-2 my-lg-0" (ngSubmit)="login()">
+        <form *ngIf='!loggedIn()' style="position: relative" #loginForm="ngForm" class="form-inline my-2 my-lg-0" (ngSubmit)="login()">
             <input class="form-control mr-sm-2" type="text" name="username" 
                 placeholder="Username" required [(ngModel)]="model.username">
             <input class="form-control mr-sm-2" type="password" name="password"
                 placeholder="Password" required [(ngModel)]="model.password">
-            <button [disabled]="!loginForm.valid" class="btn btn-success my-2 my-sm-0" type="submit">Login</button>
+                <button *ngIf='!loggin' [disabled]="!loginForm.valid" class="btn btn-success my-2 my-sm-0" type="submit">Login</button>
+                <ngx-spinner *ngIf='loggin'
+                    bdColor="rgba(51,51,51,0.8)"
+                    size="medium"
+                    color="#fff"
+                    type="ball-scale-multiple"
+                ></ngx-spinner>
         </form>
     </div>
 </nav>
@@ -97,7 +103,13 @@
                     placeholder="Username" required [(ngModel)]="model.username">
                 <input class="form-control mr-sm-2" type="password" name="password"
                     placeholder="Password" required [(ngModel)]="model.password">
-                <button [disabled]="!loginForm.valid" class="btn btn-success my-2 my-sm-0" type="submit">Login</button>
+                <button *ngIf='!loggin' [disabled]="!loginForm.valid" class="btn btn-success my-2 my-sm-0" type="submit">Login</button>
+                <ngx-spinner *ngIf='loggin'
+                    bdColor="rgba(51,51,51,0.8)"
+                    size="medium"
+                    color="#fff"
+                    type="ball-scale-multiple"
+                ></ngx-spinner>
             </form>
         </div>
     </div>

@@ -1,6 +1,13 @@
-.chat-background {
-    height: 638px;
+.chat-body {
     width: 100%;
+    height: 75vh !important;
+    font-size: x-large;
+    background: url('../../assets/home-background.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    overflow: hidden;
 }
 
 .img-circle {

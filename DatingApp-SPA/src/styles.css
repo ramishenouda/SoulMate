@@ -1,20 +1,25 @@
 /* You can add global styles to this file, and also import other style files */
 @import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
-@import '../node_modules/bootswatch/dist/sandstone/bootstrap.css';
+@import '../node_modules/bootswatch/dist/journal/bootstrap.css';
 @import '../node_modules/@fortawesome/fontawesome-free/css/all.min.css';
 @import '../node_modules/alertifyjs/build/css/alertify.min.css';
 @import '../node_modules/alertifyjs/build/css/themes/bootstrap.min.css';
 @import '../node_modules/ngx-bootstrap/datepicker/bs-datepicker.css';
 @import url('https://fonts.googleapis.com/css2?family=Gotu&family=Roboto&display=swap');
 
+html, body {
+  height: 100% !important;
+  width: 100% !important;
+}
+
 * {
   font-family: 'Roboto', sans-serif;
 }
 
 .tab-panel {
-    border: 1px solid #ddd;
-    padding: 10px;
-    border-radius: 4px;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 4px;
 }
 
 .nav-tabs > li.open, .member-tabset > .nav-tabs > li:hover {
