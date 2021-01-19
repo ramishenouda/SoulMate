@@ -1,3 +1,4 @@
+<span class="home-background"></span>
 <div *ngIf="!loggedIn() && !learnMoreMode" class="home-page pt-5 text-light">
   <div *ngIf="!registerMode && !learnMoreMode" style="text-align: center">
     <h1>Find your match</h1>
@@ -17,8 +18,14 @@
   </div>
 </div>
 
-<div *ngIf="loggedIn() || learnMoreMode" class="home-page text-light">
-  
+<div *ngIf="loggedIn() || learnMoreMode" class="home-page text-light pt-4 pl-4">
+  <div>
+    <h1>MySoul's chat system</h1>
+    <h5>
+      When one of the members you have liked, likes you back you 
+      both become one soul, and you will be able to message each other.<br>
+    </h5>
+  </div>
   <div>
     <h1>For recruiters</h1>
     <p>
@@ -29,14 +36,5 @@
       <strong>Password:</strong> password <br> 
     </p>
   </div>
-
-  <div>
-    <h1>MySoul's chat system</h1>
-    <p>
-      When one of the members you have liked, likes you back you 
-      both become one soul, and you will be able to message each other.<br>
-    </p>
-  </div>
-
   <button *ngIf="!loggedIn()" class="btn btn-primary btn-lg mr-2" (click)="learnMoreToggle()">Back to home</button>
 </div>

@@ -1,6 +1,6 @@
-<div class="container-fluid" *ngIf="screenWidth >= 768">
-  <div class="row">
-    <div class="col-sm-3 souls">
+<div style="height: fit-content !important;" class="container-fluid pt-2" *ngIf="screenWidth >= 768">
+  <div style="height: fit-content !important;" class="row">
+    <div style="height: fit-content !important;" class="col-sm-3 souls">
       <div class="card">
         <div class="card-body">
           <div class="list-group" *ngFor="let soul of souls; index as i">
@@ -25,7 +25,7 @@
         </div>
       </div>
     </div>
-    <div class="col-sm-9">
+    <div style="height: fit-content !important;" class="col-sm-9">
       <div class="card">
         <div *ngIf="soul" class="card-body">
           <app-member-messages class="chat" [activatedTap]="true" 
@@ -40,7 +40,9 @@
           </app-member-messages>
         </div>
         <div *ngIf="soulState == 0" class="card-body text-center text-light chat-body">
-          Click on someone to start chating.
+          <span class="click-on-someone">
+            Click on someone to start chating.
+          </span>
         </div>
       </div>
     </div>

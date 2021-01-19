@@ -17,9 +17,9 @@ export class NavComponent implements OnInit {
   constructor(public authService: AuthService, private alertify: AlertifyService, private router: Router, private spinner: NgxSpinnerService) { }
 
   ngOnInit() {
+    this.screenSize = window.innerWidth;
     this.loggin = false;
     this.authService.currentPhotoUrl.subscribe(photoUrl => this.photoUrl = photoUrl);
-    this.screenSize = window.outerWidth;
   }
 
   login() {

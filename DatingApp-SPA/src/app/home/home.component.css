@@ -1,4 +1,4 @@
-.home-page {
+.home-background {
     background: url("../../assets/background.jpg") no-repeat center center fixed; 
     -webkit-background-size: cover;
     -moz-background-size: cover;
@@ -6,4 +6,10 @@
     background-size: cover;
     min-height: 100%;
     overflow: hidden;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: -10;
 }
