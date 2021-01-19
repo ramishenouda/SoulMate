@@ -1,4 +1,4 @@
-<form [formGroup]="registerForm" class="text-light" (ngSubmit)="register()">
+<form [formGroup]="registerForm" class="text-light register-form" (ngSubmit)="register()">
   <h2 class="text-center text-primary">Sign Up</h2>
   <hr>
 
@@ -13,6 +13,17 @@
   </div>
 
   <div class="form-group">
+    <input class="form-control" formControlName="dateOfBirth" type="text"
+      placeholder="birthday (mm/dd/yyyy)"
+      bsDatepicker [bsConfig]="bsConfig"
+      [ngClass]="{'is-invalid': registerForm.get('dateOfBirth').errors && registerForm.get('dateOfBirth').touched}">
+    <div class="invalid-feedback"
+      *ngIf="registerForm.get('dateOfBirth').touched && registerForm.get('dateOfBirth').hasError('required')">
+      Date of Birth is required
+    </div>
+  </div>
+  
+  <div class="form-group">
     <input type="text" class="form-control" formControlName="username" placeholder="Username (used for login)"
       [ngClass]="{'is-invalid': registerForm.get('username').errors && registerForm.get('username').touched}">
     <div class="invalid-feedback">Username is required</div>
@@ -24,17 +35,6 @@
     <div class="invalid-feedback" 
       *ngIf="registerForm.get('knownAs').touched && registerForm.get('knownAs').hasError('required')">
       Known as is required
-    </div>
-  </div>
-
-  <div class="form-group">
-    <input class="form-control" formControlName="dateOfBirth" type="text"
-      placeholder="birthday (mm/dd/yyyy)"
-      bsDatepicker [bsConfig]="bsConfig"
-      [ngClass]="{'is-invalid': registerForm.get('dateOfBirth').errors && registerForm.get('dateOfBirth').touched}">
-    <div class="invalid-feedback"
-      *ngIf="registerForm.get('dateOfBirth').touched && registerForm.get('dateOfBirth').hasError('required')">
-      Date of Birth is required
     </div>
   </div>
 

@@ -1,0 +1,19 @@
+.register-form {
+    height: 79vh !important;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+}
+
+::-webkit-scrollbar {
+    width: 4px;  /* Remove scrollbar space */
+    background: transparent;  /* Optional: just make scrollbar invisible */
+    padding-left: 5px;
+}
+/* Optional: show position indicator in red */
+::-webkit-scrollbar-thumb {
+    background: #f7f7f7;
+    padding-left: 5px;
+    border-radius: 10px;
+    -webkit-border-radius: 7px;
+    background-clip: padding-box;
+}
